@@ -16,7 +16,7 @@ deposited last). Index 0 here is the half-wave cap and is never changed.
 import warnings
 
 import numpy as np
-from scipy.optimize import differential_evolution
+from scipy.optimize import differential_evolution, minimize
 from OptimalBragg import Material, qw_stack
 from OptimalBragg.layers import trans
 from OptimalBragg.materials import SiO2, TiTa2O5, air
@@ -98,30 +98,44 @@ def measure(L_true, k, sigma_rel, rng):
     return L
 
 
-def rescue(L_seen, L_design, k, noise_weight=0.05, seed=0):
+def rescue(L_seen, L_design, k, noise_weight=0.05, seed=0, t2_target=0.032,
+           method="local"):
     """Re-optimize layers 1..k (top k below the cap) on the stack as seen.
 
+    method="local": L-BFGS-B from three starting points (design, -10%, +10%).
+        Default. Checked on Day 2 against "de": same pass/fail verdict on
+        50/50 mirrors (k = 4 and 8), 12-20x faster.
+    method="de": differential evolution (global, slow), for spot checks.
     Returns the new thicknesses for those k layers.
     """
     if k == 0:
         return np.array([])
     P0 = noise_proxy(L_design)
+    scale = L_design[1:k + 1]
 
-    def cost(x):
+    def cost(y):
         L = L_seen.copy()
-        L[1:k + 1] = x
+        L[1:k + 1] = y * scale
         T1, T2 = transmissions(L)
-        return (5 * np.log10(T1 / 5e-6) ** 2 + 3 * np.log10(T2 / 0.032) ** 2
+        return (5 * np.log10(T1 / 5e-6) ** 2 + 3 * np.log10(T2 / t2_target) ** 2
                 + noise_weight * noise_proxy(L) / P0)
 
-    bounds = [(0.5 * L_design[i], 1.5 * L_design[i]) for i in range(1, k + 1)]
-    res = differential_evolution(cost, bounds, seed=seed, maxiter=300,
-                                 popsize=15, tol=1e-10, polish=True)
-    return res.x
+    bounds = [(0.5, 1.5)] * k
+    if method == "de":
+        res = differential_evolution(cost, bounds, seed=seed, maxiter=300,
+                                     popsize=15, tol=1e-10, polish=True)
+        return res.x * scale
+    best = None
+    for start in (1.0, 0.9, 1.1):
+        r = minimize(cost, np.full(k, start), method="L-BFGS-B", bounds=bounds)
+        if best is None or r.fun < best.fun:
+            best = r
+    return best.x * scale
 
 
 def trial(L_design, k, sigma_dep, sigma_meas, rng, spec="aligo",
-          model="independent", sigma_abs=0.0, rng_meas=None):
+          model="independent", sigma_abs=0.0, rng_meas=None,
+          noise_weight=0.05, t2_target=0.032, method="local"):
     """One simulated mirror. Returns (passed, noise change relative to design).
 
     Pass a separate rng_meas so that measurement noise does not change the
@@ -139,7 +153,8 @@ def trial(L_design, k, sigma_dep, sigma_meas, rng, spec="aligo",
     L_seen = measure(L_true, k, sigma_meas, rng_meas)
     target_top = L_design[:k + 1].copy()
     if k:
-        target_top[1:] = rescue(L_seen, L_design, k)
+        target_top[1:] = rescue(L_seen, L_design, k, noise_weight=noise_weight,
+                                t2_target=t2_target, method=method)
     # The top k layers and the cap are then deposited too, with their own errors.
     L_true[:k + 1] = target_top * (1 + rel[:k + 1]) + ab[:k + 1]
     dn = noise_proxy(L_true) / noise_proxy(L_design) - 1
