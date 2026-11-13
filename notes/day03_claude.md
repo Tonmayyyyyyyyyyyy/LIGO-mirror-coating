@@ -51,5 +51,22 @@ but fragile design (seed 5) and still reach the pass rate of the robust one
 design's pass rate, and at what error and measurement levels? That puts
 noise at the centre of the result.
 
-Files: `designs/` holds all candidates. `scripts/reference.npy` is still
-seed 5 and is NOT frozen.
+Files: `designs/` holds all candidates. (Superseded: see "Locked" below.)
+
+## Locked (00:55, 14 Nov)
+
+Tonmay chose to keep 2.5% and to test both kinds of design inside the same
+question. Both are locked:
+
+| Design | File | T1064 | T532 | Full Brownian ASD @100 Hz |
+| --- | --- | --- | --- | --- |
+| plain quarter-wave (not a candidate) | - | 2.19 ppm | 96.6% | 6.53e-21 m/rtHz |
+| quiet | `designs/lownoise_seed5_t2.5.npy` | 5.31 ppm | 2.47% | 6.19e-21 m/rtHz |
+| sturdy | `designs/robust_seed9_t2.5.npy` | 5.05 ppm | 2.50% | 6.68e-21 m/rtHz |
+
+The quiet design is about 7% quieter than the sturdy one (full formula).
+
+Tonmay's check on his laptop (50 trials, 2% errors, perfect measurement)
+matched mine exactly: quiet 0.64 (k=0) and 0.70 (k=4); sturdy 0.98 and 1.00.
+
+`run_sweep.py` takes `--design`. Day 4: full sweep on both designs.

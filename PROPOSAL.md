@@ -52,29 +52,26 @@ says where the effort should go (better monitoring, not better deposition).
 
 ## Preliminary results
 
-Small prototype runs (scripts in the project repository; 30 to 1000 random
-trials per case; noise from the E0900068 proxy, not the full formula).
+Prototype runs (scripts and notes in the repository; noise from the full
+Hong et al. formula unless stated).
 
-- A plain quarter-wave mirror built only for 1064 nm passed its spec in all
-  trials even with 2% random errors. The single-wavelength case does not
-  need rescue. The 532 nm requirement is what makes the mirror sensitive.
-- An optimized dual-wavelength design (T = 4.9 ppm at 1064 nm, 3.2% at
-  532 nm, noise about 5% below a plain quarter-wave stack) stays in the
-  aLIGO spec in 100% of trials at 0.5% errors, 93% at 1%, 66% at 2% and 42%
-  at 3%.
-- Re-optimizing only the top few layers, assuming the deposited thicknesses
-  are known exactly:
+- A plain quarter-wave mirror built only for 1064 nm passed in every trial
+  even with 2% errors. The single-wavelength case does not need rescue; the
+  532 nm requirement is what makes the mirror sensitive.
+- Optimizing the dual-wavelength design gives two kinds of design. A quiet
+  one (Brownian noise 6.19e-21 m/rtHz at 100 Hz) is fragile: with 2% errors
+  it passes the aLIGO spec in about 64-68% of trials. A sturdy one
+  (6.68e-21 m/rtHz, about 7% noisier) passes in about 91-98%.
+- Re-optimizing the top 4 layers raised the quiet design from 64% to 70%
+  and the sturdy one from 98% to 100% (50 trials, 2% errors, perfect
+  measurement, all layers deposited with errors, including re-optimized
+  ones). With 8 layers the quiet design reached 83% (200 trials).
+- Earlier prototype numbers (for example 58% to 95%) were on a design that
+  sat near the edge of the 532 nm window, and deposited the re-optimized
+  layers without error. They overstated the gain and are not used.
 
-  | Top layers re-optimized (k) | Pass, 2% errors | Pass, 3% errors | Change in noise |
-  | --- | --- | --- | --- |
-  | 0 | 67% | 50% | about 0 |
-  | 2 | 97% | 90% | about 0 |
-  | 4 | 100% | 97% | +0.1 to +0.2% |
-  | 6 | 100% | 100% | about +0.5% |
-
-These numbers rest on one big assumption: that the deposited thicknesses
-are known exactly. Real monitoring is not perfect. Testing that assumption
-is the main job of this project.
+So the question becomes concrete: can rescue let the quieter design approach
+the pass rate of the sturdy one, and at what error and measurement levels?
 
 ## Method
 
@@ -84,9 +81,11 @@ All work is computational, in Python, on a laptop.
    Brownian noise from Hong et al. (2013), both through the open-source
    OptimalBragg package (Caltech). The fast E0900068 proxy is used inside
    optimization loops; the full formula is used for final numbers.
-2. **Reference design.** A 20-pair dual-wavelength end mirror optimized
-   with differential evolution for the aLIGO transmission targets with a
-   noise penalty.
+2. **Two reference designs.** 20-pair dual-wavelength end mirrors
+   optimized with differential evolution for 5 ppm at 1064 nm and 2.5% at
+   532 nm (the middle of the 1-4% window), with a noise penalty: one quiet
+   but fragile, one about 7% noisier but sturdy. The rescue aims at the
+   same targets.
 3. **Errors.** Each deposited layer gets an independent random thickness
    error (standard deviation 0.5% to 3%). A common-factor error (all layers
    off together) is run as a check, since that is what the existing
