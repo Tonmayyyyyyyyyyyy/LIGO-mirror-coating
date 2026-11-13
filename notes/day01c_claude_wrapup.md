@@ -40,8 +40,9 @@ known; our claim stays limited to GW mirrors.
 - `tests/test_rescue.py`: 6 checks, including a single quarter-wave layer
   against the textbook formula. All pass.
 - `scripts/run_sweep.py`: the sweep tool for days 4-5.
-- Old prototypes (`rescue_prototype.py`, `dichroic_rescue.py`) are kept for
-  now; deletion waits for Tonmay.
+- `dichroic_rescue.py` removed (replaced by `rescue.py` + `run_sweep.py`).
+  `rescue_prototype.py` kept: it is the only script for the single-wavelength
+  quarter-wave result quoted in the proposal.
 
 ## 4. First result with the cleaned model (40 trials, 2% deposition error)
 

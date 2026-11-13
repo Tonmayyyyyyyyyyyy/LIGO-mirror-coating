@@ -46,7 +46,7 @@ in the email to the authors.
    T532 = 3.16%, noise proxy 0.95 x quarter-wave). Pass rate for both specs
    (T1064 <= 5 ppm, T532 within 3.2 +/- 0.5%), 500 trials:
    0.5% -> 0.76, 1% -> 0.45, 2% -> 0.14. The 532 nm spec is what breaks.
-3. `dichroic_rescue.py` - re-optimize the top k layers (cap fixed), 30 trials:
+3. `dichroic_rescue.py` (removed 13 Nov; replaced by `rescue.py` + `scripts/run_sweep.py`; still in git history) - re-optimize the top k layers (cap fixed), 30 trials:
 
    | k | 1% errors: pass | 2% errors: pass | noise proxy change |
    | --- | --- | --- | --- |
@@ -81,5 +81,5 @@ Rescue with the real spec (30 trials, perfect measurement):
 So the framing changes: at today's error levels aLIGO mirrors mostly pass
 anyway. The useful question is how much *looser* deposition control the
 rescue allows (the largest error that still gives 95% pass rate), and how
-measurement error limits that. `dichroic_rescue.py` now takes a spec
-argument: `aligo` (default) or `tight`.
+measurement error limits that. (These numbers came from the removed
+`dichroic_rescue.py`, which deposited the top layers without error.)
