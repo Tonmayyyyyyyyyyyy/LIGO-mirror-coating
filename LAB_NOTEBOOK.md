@@ -7,8 +7,8 @@ what was decided, what was run, what came out, what's next.
 
 ## 2026-11-13 (Day 1)
 
-- Read:
-- Decided:
-- Ran:
-- Confused by:
+- Read: Read those caltech papers again. 
+- Decided: modified research question. started fresh.
+- Ran: a python code
+- Confused by: not sure what the code did or measured. 
 - Next:
