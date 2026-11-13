@@ -24,7 +24,7 @@ deposited thicknesses (measurement error) limit it?
 | Source | Re-optimizes during deposition? | Notes |
 | --- | --- | --- |
 | Venugopalan et al. 2024 (arXiv 2110.13437) | No | Design, then Monte Carlo check. Text: i.i.d. 0.5%; code: one common factor. No layer-count or error-size sweep. |
-| Pierro et al. 2021 (arXiv 2012.02146) | No | Fixed designs; independent +/-1 nm errors. |
+| Pierro et al. 2021 (arXiv 2012.02146) | No | Robustness to absorption only (Sec. III.C); no thickness errors. Corrected 13 Nov after full read. |
 | Pierro et al. 2026 (arXiv 2601.17886), coatings grown at LMA | No | "Designs fixed before fabrication"; only post-deposition measurement described. |
 | Pinard et al. review (arXiv 1712.05701) | Not described | Thickness measured after deposition by spectrophotometry. |
 | Hartmann et al. 2026 (arXiv 2603.16656), Kranhold et al. (2605.00714, 2609.05001) | No | Metasurface hybrids; tolerance of metasurface only. |

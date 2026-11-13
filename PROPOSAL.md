@@ -92,8 +92,14 @@ All work is computational, in Python, on a laptop.
    off together) is run as a check, since that is what the existing
    OptimalBragg Monte Carlo uses.
 4. **Measurement.** The re-optimization sees measured thicknesses, not true
-   ones: true value plus a random measurement error (0, 0.25%, 0.5%, 1%).
-   The levels will be checked against published monitoring accuracy.
+   ones: true value plus a random measurement error (0, 0.25%, 0.5%, 1%,
+   2%). Sources for the scale: deposition errors of about 1 nm + 1% are
+   typical (Tikhonravov & Trubetskov 2012); run-to-run thickness spread
+   0.9% (Ta2O5) to 1.5% (SiO2), and optical vs quartz-crystal thickness
+   readings differing by about 2.6% (Wilbrandt et al. 2008); in-situ
+   fitted thicknesses off by up to about 4 nm per layer (Melzig et al. 2024).
+   No source gives a single per-layer measurement accuracy, so we sweep.
+   The re-optimized top layers and the cap are also deposited with errors.
 5. **Rescue.** The top k layers (k = 0 to 8) are re-optimized for the
    transmission targets with a noise penalty, using the measured values.
    The mirror then passes or fails on its true thicknesses.
@@ -106,8 +112,10 @@ All work is computational, in Python, on a laptop.
 | Work | What it does | What we add |
 | --- | --- | --- |
 | Venugopalan et al. 2024 (OptimalBragg) | Design by global optimization, then Monte Carlo check at 0.5% | Correction during deposition; error sizes up to 3%; measurement error |
-| Pierro et al. 2021, 2026 | Optimized multi-material designs; tolerance check with ±0.5 to 1 nm independent errors; coatings built at LMA with fixed designs | Same as above, for the standard two-material end mirror |
-| Tikhonravov et al.; Fraunhofer IOF; facet coatings 2025 | In-situ re-optimization for general optical coatings | Applied to a GW mirror, with thermal noise in the cost |
+| Pierro et al. 2021 | Exhaustive search over multi-material quarter-wave designs; robustness tested for absorption (extinction coefficient) only, not thickness | Thickness errors and their correction |
+| Pierro et al. 2026 | Ternary coatings built at LMA with fixed designs; tolerance check with independent ±0.5 nm errors | Correction during deposition for the standard two-material end mirror |
+| Poitras & Ma, Sci. Rep. 2025 | Simulated re-optimization after every layer for laser facet coatings; surrogate sensitivity analysis | Same idea applied to a GW mirror: dual-wavelength spec, thermal noise in the cost, measurement error |
+| Tikhonravov & Trubetskov; Fraunhofer IOF (Wilbrandt 2008); Melzig et al. 2024 | In-situ characterization and re-optimization in general optical coating production | Applied to a GW mirror, with thermal noise in the cost |
 
 ## Expected results
 
@@ -151,8 +159,14 @@ Ten days, 14 to 23 November 2026. See the work plan.
 - Harry et al., Class. Quantum Grav. 19, 897 (2002).
 - LIGO E0900068-v5, Advanced LIGO End Test Mass Coating Specification.
 - Pinard et al., arXiv 1712.05701 (review of LMA coatings).
-- "Surrogate sensitivity analysis of facet optical coatings produced
-  without and with in situ design reoptimization", Sci. Rep. (2025),
-  doi 10.1038/s41598-025-89625-6.
 - "Online characterization and reoptimization of optical coatings",
   Proc. SPIE vol. 5250 (authors and year to confirm).
+- Poitras & Ma, "Surrogate sensitivity analysis of facet optical coatings
+  produced without and with in situ design reoptimization", Sci. Rep. (2025).
+- Tikhonravov & Trubetskov, "Modern design tools and a new paradigm in optical
+  coating design", Appl. Opt. 51(30), 7319 (2012).
+- Wilbrandt, Stenzel, Kaiser, "All-optical in-situ analysis of PIAD deposition
+  processes", Proc. SPIE 7101 (2008).
+- Melzig, Amotchkina, Bruns, Farr, Terhürne, Trubetskov, Vergöhl, "Influence of
+  fitting algorithms on thickness determination during monitoring of optical
+  coatings", Surf. Coat. Technol. 476, 130197 (2024).
