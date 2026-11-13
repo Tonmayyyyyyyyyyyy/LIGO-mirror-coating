@@ -1,0 +1,158 @@
+# Rescuing LIGO mirror coatings during deposition: a simulation study
+
+Tasdik Ahmed Tonmay. Draft, 13 November 2026.
+
+## Background
+
+The mirrors in LIGO reflect laser light using a coating made of about forty
+thin layers of two materials, silica (SiO2) and titania-doped tantala
+(Ti:Ta2O5). Each layer is a few hundred nanometres thick. The end mirrors
+have two optical targets at once. At the main laser wavelength (1064 nm)
+they must let through only 5 ± 1 parts per million of the light. At 532 nm,
+the green light used to lock the detector, they must let through between 1%
+and 4% (LIGO E0900068). The coating is also the largest source of thermal
+noise in LIGO's most sensitive frequency band (Brownian noise), so its
+design is a careful trade-off.
+
+Coatings are designed on a computer and then deposited one layer at a time.
+Real layers come out slightly thicker or thinner than designed. Current
+practice in gravitational-wave coating work, as far as published papers
+show, is to design once and then check by simulation how often random
+errors push the mirror out of spec (Venugopalan et al. 2024; Pierro et al.
+2021, 2026). If a layer comes out wrong during deposition, the remaining
+layers are still deposited as originally designed.
+
+In other parts of optics there is a known alternative: measure the layers
+already deposited, then re-optimize the layers that have not been deposited
+yet, so they cancel the errors (Tikhonravov, Trubetskov and Amotchkina;
+Fraunhofer IOF; a 2025 study on laser facet coatings). We found no
+published study of this for gravitational-wave mirrors, and none that keeps
+thermal noise in the re-optimization.
+
+## Research question
+
+For an aLIGO-style end mirror (SiO2/Ti:Ta2O5, 20 layer pairs plus a
+half-wave silica cap, dual-wavelength spec), if only the top k layers are
+re-optimized after the rest have been deposited with random errors:
+
+1. How much larger can the deposition errors be while still keeping 95% of
+   mirrors in spec?
+2. How does this depend on how accurately the deposited layers can be
+   measured?
+3. What does the rescue cost in Brownian thermal noise?
+
+## Why this matters
+
+Tight thickness control is one of the things that makes these coatings
+hard and expensive to make. If re-optimizing a few top layers lets the same
+spec be met with looser control, the coating maker's job gets easier: fewer
+rejected mirrors, or a simpler deposition process. If the rescue only works
+when measurement is near-perfect, that is also useful to know, because it
+says where the effort should go (better monitoring, not better deposition).
+
+## Preliminary results
+
+Small prototype runs (scripts in the project repository; 30 to 1000 random
+trials per case; noise from the E0900068 proxy, not the full formula).
+
+- A plain quarter-wave mirror built only for 1064 nm passed its spec in all
+  trials even with 2% random errors. The single-wavelength case does not
+  need rescue. The 532 nm requirement is what makes the mirror sensitive.
+- An optimized dual-wavelength design (T = 4.9 ppm at 1064 nm, 3.2% at
+  532 nm, noise about 5% below a plain quarter-wave stack) stays in the
+  aLIGO spec in 100% of trials at 0.5% errors, 93% at 1%, 66% at 2% and 42%
+  at 3%.
+- Re-optimizing only the top few layers, assuming the deposited thicknesses
+  are known exactly:
+
+  | Top layers re-optimized (k) | Pass, 2% errors | Pass, 3% errors | Change in noise |
+  | --- | --- | --- | --- |
+  | 0 | 67% | 50% | about 0 |
+  | 2 | 97% | 90% | about 0 |
+  | 4 | 100% | 97% | +0.1 to +0.2% |
+  | 6 | 100% | 100% | about +0.5% |
+
+These numbers rest on one big assumption: that the deposited thicknesses
+are known exactly. Real monitoring is not perfect. Testing that assumption
+is the main job of this project.
+
+## Method
+
+All work is computational, in Python, on a laptop.
+
+1. **Optics and noise.** Transmission from the transfer-matrix method and
+   Brownian noise from Hong et al. (2013), both through the open-source
+   OptimalBragg package (Caltech). The fast E0900068 proxy is used inside
+   optimization loops; the full formula is used for final numbers.
+2. **Reference design.** A 20-pair dual-wavelength end mirror optimized
+   with differential evolution for the aLIGO transmission targets with a
+   noise penalty.
+3. **Errors.** Each deposited layer gets an independent random thickness
+   error (standard deviation 0.5% to 3%). A common-factor error (all layers
+   off together) is run as a check, since that is what the existing
+   OptimalBragg Monte Carlo uses.
+4. **Measurement.** The re-optimization sees measured thicknesses, not true
+   ones: true value plus a random measurement error (0, 0.25%, 0.5%, 1%).
+   The levels will be checked against published monitoring accuracy.
+5. **Rescue.** The top k layers (k = 0 to 8) are re-optimized for the
+   transmission targets with a noise penalty, using the measured values.
+   The mirror then passes or fails on its true thicknesses.
+6. **Output.** Pass rate against error size, for each k and each
+   measurement level. From this, the largest error that still gives 95%
+   pass rate, and the noise cost.
+
+## Relation to existing work
+
+| Work | What it does | What we add |
+| --- | --- | --- |
+| Venugopalan et al. 2024 (OptimalBragg) | Design by global optimization, then Monte Carlo check at 0.5% | Correction during deposition; error sizes up to 3%; measurement error |
+| Pierro et al. 2021, 2026 | Optimized multi-material designs; tolerance check with ±0.5 to 1 nm independent errors; coatings built at LMA with fixed designs | Same as above, for the standard two-material end mirror |
+| Tikhonravov et al.; Fraunhofer IOF; facet coatings 2025 | In-situ re-optimization for general optical coatings | Applied to a GW mirror, with thermal noise in the cost |
+
+## Expected results
+
+One of two outcomes, both reportable:
+
+- Rescue of 2 to 4 top layers still raises the tolerable error clearly
+  (for example from about 1% to about 2–3%) at realistic measurement error.
+  Then a looser deposition process could meet the aLIGO spec at almost no
+  noise cost.
+- The gain shrinks fast as measurement error grows. Then the result is a
+  number: how accurate monitoring must be before rescue is worth doing.
+
+## Limitations
+
+- Simulation only. No coating is made. Real deposition has effects not
+  modelled here (refractive index drift, absorption, non-uniform layers).
+- Rescue is done once, near the end, not after every layer.
+- One mirror type (aLIGO end mirror). Future detectors are not covered.
+- Coating labs may already correct errors this way without publishing it.
+  We will ask the authors of the Caltech and LMA papers.
+
+## Timeline
+
+Ten days, 14 to 23 November 2026. See the work plan.
+
+## Guidance needed from supervisor
+
+- Whether the measurement-error levels are reasonable.
+- Feedback on the draft write-up (day 9).
+- Advice on whether and how to contact the Caltech and LMA groups.
+
+## Sources
+
+- Venugopalan, Salces-Cárcoba, Arai, Adhikari, Optics Express 32(7), 11751
+  (2024), arXiv 2110.13437. OptimalBragg code: PyPI and
+  github.com/CaltechExperimentalGravity/OptimalBragg.
+- Pierro et al., Phys. Rev. Research (2021), arXiv 2012.02146.
+- Pierro et al., "Experimental realization of optimized ternary mirror
+  coatings", arXiv 2601.17886 (2026).
+- Hong, Yang, Gustafson, Adhikari, Chen, Phys. Rev. D 87, 082001 (2013).
+- Harry et al., Class. Quantum Grav. 19, 897 (2002).
+- LIGO E0900068-v5, Advanced LIGO End Test Mass Coating Specification.
+- Pinard et al., arXiv 1712.05701 (review of LMA coatings).
+- "Surrogate sensitivity analysis of facet optical coatings produced
+  without and with in situ design reoptimization", Sci. Rep. (2025),
+  doi 10.1038/s41598-025-89625-6.
+- "Online characterization and reoptimization of optical coatings",
+  Proc. SPIE vol. 5250 (authors and year to confirm).

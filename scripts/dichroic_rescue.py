@@ -3,9 +3,9 @@
 Errors hit all layers except the top k (not yet deposited; layer 0 is the
 fixed half-wave cap and is never re-optimized). Then the top k layers below
 the cap are re-optimized to bring T1064 <= 5 ppm and T532 back to 3.2%.
-Pass = T1064 <= 5 ppm and |T532 - 3.2%| <= 0.5%.
+Pass: aLIGO spec (E0900068 v5) or a tighter hypothetical spec.
 
-Run:  python scripts/dichroic_rescue.py [n_trials] [sigma]
+Run:  python scripts/dichroic_rescue.py [n_trials] [sigma] [aligo|tight]
 """
 import sys
 import warnings
@@ -37,8 +37,13 @@ def Ts(Ls):
     return float(trans(LAM1, base)), float(trans(LAM2, base))
 
 
+SPEC = sys.argv[3] if len(sys.argv) > 3 else "aligo"
+
+
 def passes(T1, T2):
-    return T1 <= 5e-6 and abs(T2 - 0.032) <= 0.005
+    if SPEC == "aligo":   # E0900068 v5: T1064 = 5 +/- 1 ppm, T532 in 1-4%
+        return 4e-6 <= T1 <= 6e-6 and 0.01 <= T2 <= 0.04
+    return T1 <= 5e-6 and abs(T2 - 0.032) <= 0.005   # "tight" hypothetical
 
 
 def rescue(Ls_err, k):
@@ -61,7 +66,7 @@ def rescue(Ls_err, k):
 
 rng = np.random.default_rng(3)
 errs = rng.normal(0, SIGMA, size=(N_TRIALS, len(Lopt)))
-print(f"sigma {SIGMA*100:.1f}%, {N_TRIALS} trials")
+print(f"sigma {SIGMA*100:.1f}%, {N_TRIALS} trials, spec {SPEC}")
 for k in KS:
     ok, dnoise = [], []
     for e in errs:

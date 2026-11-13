@@ -61,3 +61,25 @@ Caveats: assumes the deposited thicknesses are known exactly (big
 assumption, must test with measurement noise); 30 trials only; noise is the
 E0900068 proxy, not full Hong 2013; 532 nm pass band (+/-0.5%) is our
 choice, not an aLIGO number.
+
+## Correction (same evening): the real aLIGO spec is looser
+
+LIGO E0900068-v5: T1064 = 5 +/- 1 ppm, T532 between 1% and 4% (goal 3.2%).
+The +/-0.5% band above was ours and too tight. With the real spec, the
+dichroic design passes (1000 trials): 0.5% -> 1.00, 1% -> 0.93,
+2% -> 0.66, 3% -> 0.42.
+
+Rescue with the real spec (30 trials, perfect measurement):
+
+| k | 2% errors | 3% errors |
+| --- | --- | --- |
+| 0 | 0.67 | 0.50 |
+| 2 | 0.97 | 0.90 |
+| 4 | 1.00 | 0.97 |
+| 6 | 1.00 | 1.00 |
+
+So the framing changes: at today's error levels aLIGO mirrors mostly pass
+anyway. The useful question is how much *looser* deposition control the
+rescue allows (the largest error that still gives 95% pass rate), and how
+measurement error limits that. `dichroic_rescue.py` now takes a spec
+argument: `aligo` (default) or `tight`.
