@@ -26,7 +26,7 @@ warnings.filterwarnings("ignore")
 
 LAM1, LAM2 = 1064e-9, 532e-9
 N_PAIRS = 20
-REFERENCE_FILE = "scripts/dichroic_Lopt.npy"
+REFERENCE_FILE = "scripts/reference.npy"   # frozen Day 3 (532 nm aim 2.5%)
 
 # aLIGO ETM spec, LIGO E0900068-v5
 SPECS = {
@@ -98,7 +98,7 @@ def measure(L_true, k, sigma_rel, rng):
     return L
 
 
-def rescue(L_seen, L_design, k, noise_weight=0.05, seed=0, t2_target=0.032,
+def rescue(L_seen, L_design, k, noise_weight=0.05, seed=0, t2_target=0.025,
            method="local"):
     """Re-optimize layers 1..k (top k below the cap) on the stack as seen.
 
@@ -135,7 +135,7 @@ def rescue(L_seen, L_design, k, noise_weight=0.05, seed=0, t2_target=0.032,
 
 def trial(L_design, k, sigma_dep, sigma_meas, rng, spec="aligo",
           model="independent", sigma_abs=0.0, rng_meas=None,
-          noise_weight=0.05, t2_target=0.032, method="local"):
+          noise_weight=0.05, t2_target=0.025, method="local"):
     """One simulated mirror. Returns (passed, noise change relative to design).
 
     Pass a separate rng_meas so that measurement noise does not change the

@@ -34,7 +34,7 @@ p.add_argument("--abs-nm", type=float, default=0.0, help="absolute deposition er
 p.add_argument("--spec", default="aligo", choices=list(rescue.SPECS))
 p.add_argument("--model", default="independent", choices=["independent", "common"])
 p.add_argument("--method", default="local", choices=["local", "de"])
-p.add_argument("--t2", type=float, default=0.032, help="532 nm target used by the rescue")
+p.add_argument("--t2", type=float, default=0.025, help="532 nm target used by the rescue")
 p.add_argument("--noise-weight", type=float, default=0.05)
 p.add_argument("--seed", type=int, default=0)
 p.add_argument("--jobs", type=int, default=os.cpu_count())
