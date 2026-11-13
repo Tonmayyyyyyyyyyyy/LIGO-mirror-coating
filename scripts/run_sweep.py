@@ -38,10 +38,12 @@ p.add_argument("--t2", type=float, default=0.025, help="532 nm target used by th
 p.add_argument("--noise-weight", type=float, default=0.05)
 p.add_argument("--seed", type=int, default=0)
 p.add_argument("--jobs", type=int, default=os.cpu_count())
+p.add_argument("--design", default="designs/lownoise_seed5_t2.5.npy",
+               help="design file: designs/lownoise_seed5_t2.5.npy (quiet) or designs/robust_seed9_t2.5.npy (sturdy)")
 p.add_argument("--out", default=None)
 a = p.parse_args()
 
-L = rescue.load_reference()
+L = rescue.load_reference(a.design)
 
 
 def one(args):
@@ -56,7 +58,8 @@ def one(args):
 
 if __name__ == "__main__":
     os.makedirs("results", exist_ok=True)
-    out = a.out or (f"results/sweep_{a.model}_{a.spec}_{a.method}_n{a.trials}_"
+    tag = os.path.splitext(os.path.basename(a.design))[0]
+    out = a.out or (f"results/sweep_{tag}_{a.model}_{a.spec}_{a.method}_n{a.trials}_"
                     f"{time.strftime('%Y%m%d-%H%M%S')}.csv")
     rows = []
     t0 = time.time()
@@ -72,7 +75,7 @@ if __name__ == "__main__":
                     dn = np.array([r[1] for r in res])
                     pr = ok.mean()
                     se = np.sqrt(pr * (1 - pr) / len(ok))
-                    rows.append(dict(k=k, dep=dep, meas=meas if k else "", trials=a.trials,
+                    rows.append(dict(design=os.path.basename(a.design), k=k, dep=dep, meas=meas if k else "", trials=a.trials,
                                      pass_rate=pr, stderr=se, noise_change=dn.mean(),
                                      model=a.model, spec=a.spec, method=a.method,
                                      t2_target=a.t2, noise_weight=a.noise_weight,

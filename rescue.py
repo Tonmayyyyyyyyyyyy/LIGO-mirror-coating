@@ -26,7 +26,8 @@ warnings.filterwarnings("ignore")
 
 LAM1, LAM2 = 1064e-9, 532e-9
 N_PAIRS = 20
-REFERENCE_FILE = "scripts/reference.npy"   # frozen Day 3 (532 nm aim 2.5%)
+REFERENCE_FILE = "designs/lownoise_seed5_t2.5.npy"   # Day 3: two locked designs,
+# quiet (lownoise_seed5) and sturdy (robust_seed9), both aiming at 2.5% at 532 nm
 
 # aLIGO ETM spec, LIGO E0900068-v5
 SPECS = {
