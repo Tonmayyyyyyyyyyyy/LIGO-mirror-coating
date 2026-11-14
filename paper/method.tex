@@ -1,0 +1,152 @@
+% Methods section — draft template with our real numbers filled in.
+% Written in simple words on purpose. Read every sentence and change it
+% to your own voice where you can. Anything in [[double brackets]] is a
+% spot where YOU must write the sentence yourself.
+
+\section{Methods}
+
+We simulate the manufacturing of a 40-layer mirror coating made of
+silica (SiO$_2$) and titania-doped tantala (Ti:Ta$_2$O$_5$), the same
+material pair used in Advanced LIGO's end mirrors. Every layer gets a
+random thickness error, as happens in a real coating machine. We then
+test a simple idea: after most of the layers are made, re-design the
+few layers that are not made yet, so they cancel the errors in the
+layers below. We call this step the \emph{rescue}. All of this is done
+in simulation, on a laptop. No real coating is made.
+
+The parts below describe the optical and noise models (Sec.~1.1), the
+two mirror designs we test (Sec.~1.2), the error model (Sec.~1.3), the
+rescue step (Sec.~1.4), and how we count a mirror as good or bad
+(Sec.~1.5).
+
+\subsection{Optical and thermal noise models}
+
+We compute how much light a coating transmits with the transfer-matrix
+method, at two wavelengths: 1064~nm (the main laser) and 532~nm (the
+green locking beam), both at normal incidence. We use the open-source
+\textsc{OptimalBragg} package from Caltech \cite{Venugopalan2024} for
+these calculations. Material values are in Table~\ref{tab:materials}.
+
+A warm coating also shakes a tiny bit on its own (Brownian thermal
+noise), and this shaking is one of the main noise sources in LIGO. We
+compute this noise following Hong \emph{et al.}~\cite{Hong2013}, as
+implemented in \textsc{OptimalBragg}, with a laser beam radius of
+6.2~cm and a temperature of 295~K. We report it as the amplitude
+spectral density at 100~Hz. Inside optimization loops we use a faster
+stand-in: the sum of each material's total thickness weighted by its
+loss angle and stiffness, following LIGO document E0900068. The full
+formula is used for all final numbers.
+
+\begin{table}[h]
+\centering
+\caption{Material values used in all simulations, taken from the
+\textsc{OptimalBragg} package \cite{Venugopalan2024}, which cites
+Ref.~\cite{Principe2010}.}
+\label{tab:materials}
+\begin{tabular}{lcc}
+\hline
+ & SiO$_2$ & Ti:Ta$_2$O$_5$ \\
+\hline
+Refractive index (1064 nm) & 1.45 & 2.06 \\
+Young's modulus (GPa) & 60 & 140 \\
+Poisson ratio & 0.17 & 0.23 \\
+Mechanical loss angle & $5\times10^{-5}$ & $2\times10^{-4}$ \\
+\hline
+\end{tabular}
+\end{table}
+
+% Note for you: the Caltech paper itself uses a larger loss angle,
+% 3.6e-4, for Ti:Ta2O5. This changes the noise numbers but not the
+% pass rates. Say this in one sentence here:
+[[One sentence: other papers use a loss angle of $3.6\times10^{-4}$
+for Ti:Ta$_2$O$_5$; using it would raise all noise values but change
+no pass rate, because noise is not part of the pass test.]]
+
+\subsection{The two mirror designs}
+
+Both designs have 40 layers (20 pairs) plus a half-wave SiO$_2$ cap on
+top, and both aim at the same two targets: a transmission of 5~ppm at
+1064~nm and 2.5\% at 532~nm. We picked 2.5\% because it sits in the
+middle of the allowed window (1--4\%, see Sec.~1.5), so errors have
+room on both sides.
+
+We made the designs with the differential evolution optimizer in
+SciPy, on top of \textsc{OptimalBragg}'s optics and noise functions.
+% [[One sentence in your own words on what the optimizer does, e.g.
+% it keeps adjusting all 40 layer thicknesses until the coating hits
+% both transmission targets with as little thermal noise as it can.]]
+
+Running the optimizer from different random starting points gave
+designs of two kinds, and we kept one of each:
+\begin{itemize}
+\item a \emph{quiet} design, with a Brownian noise of
+$6.19\times10^{-21}\,\mathrm{m}/\sqrt{\mathrm{Hz}}$ at 100~Hz, which
+turned out to be fragile against thickness errors;
+\item a \emph{sturdy} design, about 7\% noisier
+($6.68\times10^{-21}\,\mathrm{m}/\sqrt{\mathrm{Hz}}$), which tolerates
+errors much better.
+\end{itemize}
+Testing both lets us ask whether the rescue can make the quiet design
+usable, or only helps a design that is already sturdy.
+
+\subsection{Deposition error model}
+
+Layers are deposited one at a time, from the substrate up. The true
+thickness of layer $i$ comes out as
+\begin{equation}
+d_i = d_i^{(0)}\,(1+\epsilon_i),
+\end{equation}
+where $d_i^{(0)}$ is the planned thickness and $\epsilon_i$ is a
+random error drawn from a normal distribution with zero mean and
+standard deviation $\sigma$. Each layer gets its own independent
+error. We test $\sigma$ from 0.5\% to 3\%; around the interesting
+region we use steps of 0.25\%.
+
+For comparison, the Monte Carlo shipped with \textsc{OptimalBragg}
+uses one shared error for all layers (the whole stack gets thicker or
+thinner together). [[After the Day-6 check, add one sentence with the
+result of running our test with that shared-error model.]]
+
+\subsection{The rescue step}
+
+In each simulated run, every layer except the top $k$ (and the cap) is
+deposited with the random errors above. We then assume the machine has
+measured the deposited layers, with its own error: each measured
+thickness is the true one times $(1+\mu_i)$, where $\mu_i$ is normal
+with standard deviation 0, 0.25, 0.5, 1 or 2\%. No published source
+gives one agreed accuracy for in-situ monitoring, so we sweep this
+value instead of picking one.
+
+Using the measured stack, we re-optimize only the top $k$ layers
+(the half-wave cap is never changed), aiming at the same two targets
+with the same small noise penalty. We use the L-BFGS-B optimizer
+started from three points (the planned thicknesses, and $\pm10\%$).
+We checked it against the slower differential evolution on 50 mirrors
+and both gave the same pass/fail answer every time. The re-designed
+top layers are then ``deposited'' with the same error model as all
+other layers --- the rescue does not get perfect layers. We test
+$k = 0$ (no rescue), 2, 4, 6 and 8.
+
+\subsection{Pass test and Monte Carlo}
+
+A finished mirror \emph{passes} if its true transmissions land inside
+the Advanced LIGO end-mirror windows \cite{E0900068}: between 4 and
+6~ppm at 1064~nm, and between 1\% and 4\% at 532~nm. Thermal noise is
+not part of the pass test; we report it separately, because the rescue
+could in principle trade noise for yield.
+
+For every combination of design, $\sigma$, measurement error and $k$,
+we simulate 200 mirrors (400 in the fine scan) and report the fraction
+that pass, with binomial uncertainties. The same random mirrors are
+reused across all $k$ and all measurement levels, so differences
+between settings come from the settings, not from luck. All code is
+Python, with fixed random seeds, and is available at
+\url{https://github.com/Tonmayyyyyyyyyyyy/LIGO-mirror-coating}.
+
+% References you will need (fill in your .bib file):
+% Venugopalan2024 - Optics Express 32(7) 11751 (2024), arXiv 2110.13437
+% Hong2013       - Phys. Rev. D 87, 082001 (2013)
+% E0900068       - LIGO document E0900068-v5
+% Principe2010   - arXiv 0912.0107 (material loss angles)
+% Harry2002      - Class. Quantum Grav. 19, 897 (2002), first coating
+%                  Brownian noise formula (cite in the introduction)
