@@ -61,3 +61,10 @@ the .bib.
 ## Next session
 
 - Slow differential-evolution spot check at k = 4.
+- Size check against real aLIGO mirrors: for both designs, find how large
+  a shared thickness error makes T(532 nm) about 10x the design value, and
+  whether T(1064 nm) stays inside 4-6 ppm at that error. Also try an error
+  on only one material (tantala only, silica only). If the error needed is
+  small (about 1-2%), our model matches the aLIGO report in size, not just in
+  kind. Paper wording either way: "reproduces the qualitative behaviour",
+  not "validates".
