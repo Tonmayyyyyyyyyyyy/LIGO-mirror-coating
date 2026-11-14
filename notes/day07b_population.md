@@ -94,3 +94,37 @@ and `summary_dep0.02.txt`. Sample: the 32 designs that meet the spec.
 - At 1% shared error, sturdier designs again lose less from measurement
   error (rho = -0.88). At 2% everything fails so often that the pattern
   is not clear (rho = -0.29, p = 0.10).
+
+## Research question 1 on all 32 designs (fine scan, 15 Nov 2026)
+
+`scripts/population_fine.sh`, `scripts/population_tolerable.py`, output
+`results/population_fine/summary.txt`. Independent errors, 0.25-3% in
+0.25% steps, 200 mirrors per point (same mirrors for every design), rescue
+= top 4 layers. Tolerable error = largest error with 95% pass; "below" =
+under 95% already at 0.25% (counted as 0).
+
+| Curve | Median tolerable error | Middle half of designs |
+| --- | --- | --- |
+| no rescue | 1.14% | 0.96-1.48% |
+| rescue, perfect measurement | 1.71% | 1.52-2.19% |
+| rescue, 1% measurement error | 1.58% | 0.91-1.96% |
+| rescue, 2% measurement error | 0 (below) | 0-1.43% |
+
+- Perfect measurement: rescue raises tolerable error in 30 of 32 (27 with
+  no overlap of 95% ranges). Median ratio 1.43 (range 0.68-2.04).
+- 1% measurement: raises it in 25 of 32 (14 clearly), lowers in 7 (3 clearly).
+- 2% measurement: lowers it in 25 of 32 (18 clearly). 18 designs are
+  "below": rescue with 2% measurement error fails even tiny-error mirrors.
+- Sturdier designs lose less from measurement error (rho = -0.52, p = 0.002).
+  Sturdiness vs gain at perfect measurement: rho = +0.30, p = 0.09 (weak).
+- Noise change from rescue: median -0.02% (range -0.43 to +0.19%). Negligible.
+- Original sturdy design here: 1.79% -> 2.54% (200 mirrors); Day 5 with 400
+  mirrors gave 1.69% -> 2.65%. Ranges overlap. It is the 3rd sturdiest of 32,
+  so the Day 5 headline is near the top, not typical. Typical is 1.14 -> 1.71%.
+
+Why 2% measurement error is so harmful at small errors: in rescue.py the
+rescue runs on every mirror, even ones that were already fine. With 2%
+measurement error, the optimizer "fixes" errors that are mostly measurement
+noise and breaks good mirrors. A real process would probably only re-optimize
+when the measured mirror is out of spec. We did not test that; it belongs in
+Limitations (it changes how question 2 should be read).
