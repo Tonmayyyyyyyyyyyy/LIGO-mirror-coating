@@ -1,0 +1,4 @@
+seed 7: 39s, T1064 5.17 ppm, T532 2.50%, proxy/QW 0.919
+  max layer difference vs lownoise_seed5: 42.44%
+  max layer difference vs seed2: 64.17%
+  max layer difference vs robust_seed9: 87.47%
