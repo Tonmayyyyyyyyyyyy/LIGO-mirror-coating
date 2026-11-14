@@ -53,3 +53,18 @@ are more fragile (rho = +0.65); noise cost nil.
 Change: present results on the population, with the three originals as
 worked examples (the fine scans and figures), not as the evidence.
 Remove: "a fragile design cannot be rescued" as a general statement.
+
+## Update (15 Nov): all 32 designs as one sample
+
+The three originals are now ordinary members of the sample (Tonmay's
+decision). Recomputed on all 32 designs that meet the spec
+(`results/population/summary.txt`):
+
+- rescue raises pass rate, perfect measurement: 32 of 32 (27 beyond 2 s.e.)
+- 1% measurement error: 28 of 32; 2%: 15 gain, 13 lose (4 beyond 2 s.e.)
+- sturdiness vs loss from 0 to 2% measurement error: rho = -0.87, p < 0.001
+- noise proxy vs sturdiness: rho = +0.66, p < 0.001
+- sturdiness vs gain at perfect measurement: rho = -0.16, p = 0.38
+- medians: no rescue 76%; rescue 92% / 89% / 78% at 0 / 1 / 2% measurement
+
+These numbers replace the 29-design ones above.

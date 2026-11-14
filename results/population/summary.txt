@@ -35,21 +35,21 @@ robust_seed9_t2.5   5.05   2.50  1.040   6.68 ok     92    100   100    96      
 seed27           5.06   2.44  0.946   6.31 ok     92     98    98    94       +6      +2
 seed11           5.15   2.45  0.935   6.26 ok     96     99    98    94       +4      -1
 
-Designs meeting the spec at zero error: 32 of 33 (29 from the population script, 3 originals).
+Designs meeting the spec at zero error: 32 of 33 (29 script-made, 3 originals). All of them form the sample.
 
-Population designs only (originals excluded):
-  rescue raises pass rate, perfect measurement: 29 of 29
-    ... by more than 2 standard errors: 25 of 29
-  rescue raises pass rate, 1% measurement error: 26 of 29
-  rescue raises pass rate, 2% measurement error: 14 of 29
-  rescue LOWERS pass rate, 2% measurement error: 11 of 29
-    ... by more than 2 standard errors: 3 of 29
-  already >= 95% without rescue (rescue not needed at 2%): 1 of 29
+All 32 designs that meet the spec:
+  rescue raises pass rate, perfect measurement: 32 of 32
+    ... by more than 2 standard errors: 27 of 32
+  rescue raises pass rate, 1% measurement error: 28 of 32
+  rescue raises pass rate, 2% measurement error: 15 of 32
+  rescue LOWERS pass rate, 2% measurement error: 13 of 32
+    ... by more than 2 standard errors: 4 of 32
+  already >= 95% without rescue: 1 of 32
 
-Spearman rank correlations (population designs):
-  noise proxy vs sturdiness (k0 pass rate): rho = +0.65, p = 0.000
-  sturdiness vs rescue gain at perfect measurement: rho = -0.21, p = 0.271
-  sturdiness vs rescue gain at 2% measurement error: rho = +0.53, p = 0.003
-  sturdiness vs pass-rate loss from 0 to 2% measurement error: rho = -0.88, p = 0.000
+Spearman rank correlations (all designs that meet the spec):
+  noise proxy vs sturdiness (k0 pass rate): rho = +0.66, p = 0.000
+  sturdiness vs rescue gain at perfect measurement: rho = -0.16, p = 0.376
+  sturdiness vs rescue gain at 2% measurement error: rho = +0.56, p = 0.001
+  sturdiness vs pass-rate loss from 0 to 2% measurement error: rho = -0.87, p = 0.000
 
-Median over population designs: k0 75%, k4 m0 92%, k4 m1 89%, k4 m2 80%
+Median over all designs that meet the spec: k0 76%, k4 m0 92%, k4 m1 89%, k4 m2 78%
