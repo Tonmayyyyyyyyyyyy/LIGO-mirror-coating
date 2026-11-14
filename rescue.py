@@ -136,7 +136,7 @@ def rescue(L_seen, L_design, k, noise_weight=0.05, seed=0, t2_target=0.025,
 
 def trial(L_design, k, sigma_dep, sigma_meas, rng, spec="aligo",
           model="independent", sigma_abs=0.0, rng_meas=None,
-          noise_weight=0.05, t2_target=0.025, method="local"):
+          noise_weight=0.05, t2_target=0.025, method="local", return_stack=False):
     """One simulated mirror. Returns (passed, noise change relative to design).
 
     Pass a separate rng_meas so that measurement noise does not change the
@@ -159,4 +159,6 @@ def trial(L_design, k, sigma_dep, sigma_meas, rng, spec="aligo",
     # The top k layers and the cap are then deposited too, with their own errors.
     L_true[:k + 1] = target_top * (1 + rel[:k + 1]) + ab[:k + 1]
     dn = noise_proxy(L_true) / noise_proxy(L_design) - 1
+    if return_stack:
+        return passes(L_true, spec), dn, L_true
     return passes(L_true, spec), dn
