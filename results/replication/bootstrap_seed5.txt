@@ -1,0 +1,6 @@
+results/replication/remade_seed5.csv
+ k  meas   tolerable error   68% range        95% range
+ 0    -    1.05%           below-1.11%       below-1.17%
+ 4    0%   1.62%          1.58%-1.68%      1.50%-1.75%
+ 4    1%   1.31%          1.19%-1.50%      1.00%-1.58%
+ 4    2%    below           below- below       below- below
