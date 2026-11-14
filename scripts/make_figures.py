@@ -66,7 +66,7 @@ ax.text(1.0, 95.6, "95% pass", color=INK2, fontsize=8)
 curve(ax, d[(0, None)], BLUE, "o", "-", "no rescue")
 curve(ax, d[(4, 0.0)], ORANGE, "s", "-", "rescue, perfect measurement", 1.5)
 curve(ax, d[(4, 0.01)], AQUA, "^", "--", "rescue, 1% measurement error", -1)
-curve(ax, d[(4, 0.02)], YELLOW, "D", ":", "rescue, 2% measurement error", -4)
+curve(ax, d[(4, 0.02)], YELLOW, "D", ":", "rescue, 2% measurement error", 0)
 ax.set_xlabel("Deposition error per layer (%, standard deviation)")
 ax.set_ylabel("Mirrors that pass (%)")
 ax.set_ylim(58, 101)
@@ -98,53 +98,56 @@ def tolerable(rows, rng, nboot=2000):
 
 
 rng = np.random.default_rng(0)
-designs = [("Sturdy", "results/day5/fine_sturdy.csv", BLUE, "o"),
-           ("Middle", "results/day7/fine_seed2.csv", ORANGE, "s"),
-           ("Quiet", "results/day7/fine_quiet.csv", AQUA, "^")]
-fig, ax = plt.subplots(figsize=(5.2, 3.4))
+designs = [("Quiet", "results/day7/fine_quiet.csv"),
+           ("Middle", "results/day7/fine_seed2.csv"),
+           ("Sturdy", "results/day5/fine_sturdy.csv")]
+fig, axes = plt.subplots(1, 3, figsize=(6.4, 3.0), sharey=True)
 xs = np.array([0, 1, 2])
 table = []
-for j, (name, path, color, marker) in enumerate(designs):
+for ax, (name, path) in zip(axes, designs):
     d = load(path)
     c0, lo0, hi0, start = tolerable(d[(0, None)], rng)
-    ax.axhline(c0 * 100, color=color, lw=1.2, ls="--", alpha=0.9)
-    ax.text(2.28, c0 * 100, f"{name}, no rescue", color=INK, fontsize=8, va="center")
-    pts = []
-    for m in (0.0, 0.01, 0.02):
+    ax.axhspan(lo0 * 100, hi0 * 100, color=BLUE, alpha=0.12, lw=0)
+    ax.axhline(c0 * 100, color=BLUE, lw=1.5, ls="--")
+    good = []
+    for xi, m in zip(xs, (0.0, 0.01, 0.02)):
         c, lo, hi, start = tolerable(d[(4, m)], rng)
-        pts.append((c, lo, hi))
         table.append((name, m, c0, c, lo, hi))
-    x = xs + (j - 1) * 0.06
-    for xi, (c, lo, hi) in zip(x, pts):
-        if np.isnan(c):       # already below 95% at the smallest error tested
-            ax.annotate("", (xi, start * 100 - 0.25), (xi, start * 100),
-                        arrowprops=dict(arrowstyle="->", color=color, lw=1.5))
+        if np.isnan(c):   # already below 95% at the smallest error tested
+            ax.annotate("", (xi, 0.05), (xi, 0.45),
+                        arrowprops=dict(arrowstyle="->", color=ORANGE, lw=1.8))
         else:
-            ax.errorbar(xi, c * 100, yerr=[[c * 100 - lo * 100], [hi * 100 - c * 100]],
-                        color=color, marker=marker, ms=6, capsize=0, elinewidth=1)
-    good = [(xi, c) for xi, (c, _, _) in zip(x, pts) if not np.isnan(c)]
-    ax.plot([g[0] for g in good], [g[1] * 100 for g in good], color=color, lw=1.5)
-    ax.annotate(f"{name}, rescue", (good[0][0], good[0][1] * 100), xytext=(-8, 6),
-                textcoords="offset points", ha="right", color=INK, fontsize=8)
-ax.set_xticks(xs, ["0%", "1%", "2%"])
-ax.set_xlim(-0.6, 3.3)
-ax.set_ylim(0, 3.0)
-ax.set_xlabel("Measurement error (standard deviation)")
-ax.set_ylabel("Largest error with 95% pass (%)")
-ax.set_title("Rescue (top 4 layers) vs. no rescue, three designs. "
-             "Arrow: below 95% even at the smallest error tested",
-             loc="left", fontsize=8, color=INK)
+            ax.errorbar(xi, c * 100, yerr=[[(c - lo) * 100], [(hi - c) * 100]],
+                        color=ORANGE, marker="s", ms=6, capsize=0, elinewidth=1.2)
+            good.append((xi, c * 100))
+    if len(good) > 1:
+        ax.plot(*zip(*good), color=ORANGE, lw=1.5)
+    ax.set_title(name + " design", fontsize=9, color=INK)
+    ax.set_xticks(xs, ["0%", "1%", "2%"])
+    ax.set_xlim(-0.5, 2.5)
+axes[0].set_ylim(0, 3.0)
+axes[0].set_ylabel("Largest error with 95% pass (%)")
+axes[1].set_xlabel("Measurement error (standard deviation)")
+handles = [plt.Line2D([], [], color=BLUE, ls="--", lw=1.5),
+           plt.Line2D([], [], color=ORANGE, marker="s", lw=1.5),
+           plt.Line2D([], [], color=ORANGE, marker=r"$\downarrow$", ls="none", ms=9)]
+fig.legend(handles, ["no rescue (band: 95% range)", "rescue, top 4 layers",
+                     "rescue: below 95% even at the smallest error tested"],
+           loc="upper center", bbox_to_anchor=(0.5, 1.12), ncol=2, fontsize=8)
 save(fig, "fig2_three_designs")
 with open(OUT / "fig2_values.txt", "w") as f:
     f.write("design, meas, no-rescue tolerable, rescue tolerable [95% range] (%)\n")
+    f.write("'below' = under 95% at the smallest error tested (0.25% quiet, 1% others)\n")
     for name, m, c0, c, lo, hi in table:
-        f.write(f"{name:7s} {m:.0%}  {c0*100:.2f}  {c*100:.2f} [{lo*100:.2f}-{hi*100:.2f}]\n")
+        r = "below" if np.isnan(c) else f"{c*100:.2f} [{lo*100:.2f}-{hi*100:.2f}]"
+        f.write(f"{name:7s} {m:.0%}  {c0*100:.2f}  {r}\n")
 
 # ---- Figure 3: independent vs shared errors (sturdy design) ----
 ind = load("results/day5/fine_sturdy.csv")
 com = load("results/day6/common_sturdy.csv")
 fig, ax = plt.subplots(figsize=(5.2, 3.4))
 ax.axhline(95, color=INK2, lw=1, ls=":")
+ax.text(3.2, 96, "95% pass", color=INK2, fontsize=8)
 curve(ax, ind[(0, None)], BLUE, "o", "-", "independent, no rescue", -2)
 curve(ax, ind[(4, 0.0)], ORANGE, "s", "-", "independent, rescue", 2)
 curve(ax, com[(0, None)], BLUE, "o", "--", "shared, no rescue")
@@ -162,7 +165,7 @@ cases, block = [], None
 for line in open("results/day7/failures.txt"):
     m = re.match(r"(\w+), (\w+) errors, (\d+)%", line)
     if m:
-        block = f"{m.group(1)}, {m.group(2)}, {m.group(3)}%"
+        block = f"{m.group(1)}, {m.group(2).replace('common', 'shared')}, {m.group(3)}%"
         continue
     m = re.match(r"\s+(no rescue|k=4, meas 0%)\s+pass\s+(\d+)\s+fails: (.*)", line)
     if m and block:
@@ -188,7 +191,10 @@ for block, tag, c in cases:
         left += v
     other = (200 - c["pass"] - sum(c.get(k, 0) for k, _, _ in cats)) / 2
     if other > 0:
-        ax.barh(y, other, left=left, color=GRID, height=0.7, edgecolor="white", linewidth=1)
+        ax.barh(y, other, left=left, color="#b9b8b3", height=0.7, edgecolor="white", linewidth=1)
+        left += other
+    if left == 0:
+        ax.text(0.5, y, "no failures", va="center", fontsize=7.5, color=INK2)
     labels.append(f"{block} — {tag}")
     ys.append(y)
     y += 1 if tag == "no rescue" else 1.6
@@ -197,8 +203,10 @@ ax.invert_yaxis()
 ax.set_xlabel("Mirrors that fail (%), by reason (200 mirrors per bar)")
 ax.grid(axis="y", visible=False)
 handles = [plt.Rectangle((0, 0), 1, 1, color=col) for _, _, col in cats]
-ax.legend(handles, [lab for _, lab, _ in cats], loc="lower right", fontsize=8)
-ax.set_title("Rescue fixes 532 nm failures; what is left fails at 1064 nm",
+handles.append(plt.Rectangle((0, 0), 1, 1, color="#b9b8b3"))
+ax.legend(handles, [lab for _, lab, _ in cats] + ["too low"], loc="upper center",
+          bbox_to_anchor=(0.45, -0.13), ncol=4, fontsize=8)
+ax.set_title("Rescue fixes 532 nm failures; most of what is left fails at 1064 nm",
              loc="left", fontsize=9, color=INK)
 save(fig, "fig4_failures")
 print("figures written to", OUT)

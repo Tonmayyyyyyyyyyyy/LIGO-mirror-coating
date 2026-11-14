@@ -1,0 +1,11 @@
+design, meas, no-rescue tolerable, rescue tolerable [95% range] (%)
+'below' = under 95% at the smallest error tested (0.25% quiet, 1% others)
+Quiet   0%  0.85  0.83 [0.78-0.88]
+Quiet   1%  0.85  below
+Quiet   2%  0.85  below
+Middle  0%  1.21  1.76 [1.64-1.84]
+Middle  1%  1.21  1.45 [1.30-1.56]
+Middle  2%  1.21  below
+Sturdy  0%  1.69  2.65 [2.48-2.81]
+Sturdy  1%  1.69  2.61 [2.45-2.80]
+Sturdy  2%  1.69  2.40 [2.11-2.55]

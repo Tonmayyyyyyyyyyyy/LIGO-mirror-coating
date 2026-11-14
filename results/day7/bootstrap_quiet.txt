@@ -1,0 +1,12 @@
+results/day7/fine_quiet.csv
+ k  meas   tolerable error   68% range        95% range
+ 0    -    0.85%          0.83%-0.88%      0.81%-0.91%
+ 2    0%   0.88%          0.86%-0.91%      0.84%-0.95%
+ 2    1%   0.53%          0.44%-0.56%       below-0.59%
+ 2    2%    below           below- below       below- below
+ 4    0%   0.83%          0.81%-0.85%      0.78%-0.88%
+ 4    1%    below           below- below       below- below
+ 4    2%    below           below- below       below- below
+ 6    0%   1.04%          0.99%-1.08%      0.95%-1.12%
+ 6    1%    below           below- below       below- below
+ 6    2%    below           below- below       below- below

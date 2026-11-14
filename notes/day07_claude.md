@@ -86,3 +86,30 @@ What it says:
 - Failures are almost always "too much light", never too little.
 
 This gives the Discussion a mechanism, not just numbers.
+
+## 4. Quiet design fine scan and final figures (Day 7)
+
+Quiet design, 400 trials, errors 0.25-1.5% in 0.25% steps
+(`results/day7/fine_quiet.csv`, `bootstrap_quiet.txt`). Tolerable error
+(95% pass): no rescue 0.85% (0.81-0.91); rescue k = 4, perfect measurement
+0.83% (no gain); with 1% or 2% measurement error, below 95% even at 0.25%
+deposition error. So the ladder is complete:
+
+| Design | No rescue | Rescue, meas 0% | 1% | 2% |
+| --- | --- | --- | --- | --- |
+| quiet | 0.85% | 0.83% | below 0.25% | below 0.25% |
+| middle | 1.21% | 1.76% | 1.45% | below 1% |
+| sturdy | 1.69% | 2.65% | 2.61% | 2.40% |
+
+Figures (`scripts/make_figures.py`, output `paper/figures/`, PDF + PNG):
+1. `fig1_main_result`: sturdy design, pass rate vs deposition error,
+   no rescue vs rescue at 0/1/2% measurement error.
+2. `fig2_three_designs`: tolerable error vs measurement error, three
+   designs side by side (the main summary figure). Values in
+   `fig2_values.txt`.
+3. `fig3_shared_error`: sturdy design, independent vs shared errors.
+   Shared-error curves have only 1/2/3% points.
+4. `fig4_failures`: why mirrors fail, with and without rescue.
+
+Tonmay: check every number on the figures against these notes before
+writing Results.

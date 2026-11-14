@@ -1,4 +1,5 @@
 """Day 7: uncertainty on the main number (largest error with 95% pass rate).
+# "below" = already under 95% at the smallest error tested (1% for sturdy and middle, 0.25% for quiet)
 
 For each (k, measurement error) curve in a fine-scan CSV, the crossing of
 95% is found by linear interpolation between error steps, at the first step
@@ -43,7 +44,7 @@ for (k, meas), rows in sorted(curves.items()):
     # below the first error step -> 0 (shown as "<1%"); above the last -> 99
     boot = np.nan_to_num(boot, nan=0.0, posinf=0.99)
     q = np.percentile(boot, [16, 84, 2.5, 97.5]) * 100
-    f = lambda x: "  <1% " if x == 0 else (" >3%  " if x > 90 else f"{x:.2f}%")
+    f = lambda x: " below" if x == 0 else (" >3%  " if x > 90 else f"{x:.2f}%")
     c = f(0.0 if np.isnan(c0) else min(c0, 0.99) * 100)
     m = "  -  " if meas == "" else f"{float(meas):.0%}".rjust(4) + " "
     print(f" {k}  {m}  {c}          {f(q[0])}-{f(q[1])}      {f(q[2])}-{f(q[3])}")
