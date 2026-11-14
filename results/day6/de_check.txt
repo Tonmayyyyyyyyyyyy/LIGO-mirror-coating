@@ -1,0 +1,23 @@
+k = 4, 100 mirrors per row
+design  model        dep  meas  pass(fast) pass(DE)  only-DE-passes  only-fast-passes
+quiet   common       2%  0%   0.37       0.45        8               0
+quiet   common       2%  1%   0.40       0.38        1               3
+quiet   common       3%  0%   0.21       0.26        5               0
+quiet   common       3%  1%   0.32       0.37        5               0
+quiet   independent  2%  0%   0.60       0.60        0               0
+quiet   independent  2%  1%   0.53       0.53        0               0
+quiet   independent  3%  0%   0.53       0.54        1               0
+quiet   independent  3%  1%   0.49       0.49        0               0
+sturdy  common       2%  0%   0.69       0.70        1               0
+sturdy  common       2%  1%   0.56       0.56        0               0
+sturdy  common       3%  0%   0.41       0.41        0               0
+sturdy  common       3%  1%   0.47       0.47        0               0
+sturdy  independent  2%  0%   0.99       0.99        0               0
+sturdy  independent  2%  1%   1.00       0.99        0               1
+sturdy  independent  3%  0%   0.85       0.86        1               0
+sturdy  independent  3%  1%   0.91       0.90        0               1
+total 1600 mirrors: DE-only passes 22, fast-only passes 5
+
+real	16m42.946s
+user	32m58.103s
+sys	0m0.525s

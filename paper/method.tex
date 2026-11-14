@@ -124,8 +124,12 @@ Using the measured stack, we re-optimize only the top $k$ layers
 (the half-wave cap is never changed), aiming at the same two targets
 with the same small noise penalty. We use the L-BFGS-B optimizer
 started from three points (the planned thicknesses, and $\pm10\%$).
-We checked it against the slower differential evolution on 50 mirrors
-and both gave the same pass/fail answer every time. The re-designed
+We checked it against the slower differential evolution on 1600
+mirrors ($k=4$, both designs, both error models, 2--3\% errors, 0 and
+1\% measurement error). For the sturdy design the two disagreed on 4 of
+800 mirrors, with no direction. For the quiet design with a shared error,
+differential evolution rescued up to 8 more mirrors in 100, so our
+numbers for that case slightly underestimate what rescue can do. The re-designed
 top layers are then ``deposited'' with the same error model as all
 other layers --- the rescue does not get perfect layers. We test
 $k = 0$ (no rescue), 2, 4, 6 and 8.

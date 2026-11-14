@@ -89,9 +89,27 @@ What it says:
   Advanced LIGO end mirrors; keeping 1064 nm in spec at the same time
   requires the error to be mostly in one material." Plus: different design.
 
+## 5. Slow optimizer (differential evolution) vs fast one (done 14 Nov)
+
+`scripts/day6_de_check.py`, output `results/day6/de_check.txt`. Same
+mirrors, only the rescue optimizer changes. k = 4, 100 mirrors per row,
+both designs, both error models, 2% and 3% errors, 0 and 1% measurement.
+1600 mirrors in total, 17 minutes.
+
+- Sturdy design (our main result): 4 disagreements in 800 mirrors, 2 each
+  way. The fast optimizer is fine.
+- Quiet design, independent errors: 1 disagreement in 400.
+- Quiet design, shared error: DE passes more: +8, +5, +5 in 100 at
+  perfect / 1% measurement, one row -2. So for this one case our fast
+  numbers are a few points pessimistic. The conclusion does not change:
+  the quiet design stays far below 95% either way.
+- Total: DE-only passes 22, fast-only passes 5, out of 1600.
+- method.tex updated (the old "50 mirrors, same answer every time" line).
+
 ## Next session
 
-- Slow differential-evolution spot check at k = 4.
+Nothing left from Day 6. (Done: slow-optimizer check, section 5; size
+check, section 4. Original plan text below for the record.)
 - Size check against real aLIGO mirrors: for both designs, find how large
   a shared thickness error makes T(532 nm) about 10x the design value, and
   whether T(1064 nm) stays inside 4-6 ppm at that error. Also try an error
