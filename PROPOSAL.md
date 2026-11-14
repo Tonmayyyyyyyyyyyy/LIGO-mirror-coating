@@ -61,7 +61,7 @@ Hong et al. formula unless stated).
 - Optimizing the dual-wavelength design gives two kinds of design. A quiet
   one (Brownian noise 6.19e-21 m/rtHz at 100 Hz) is fragile: with 2% errors
   it passes the aLIGO spec in about 64-68% of trials. A sturdy one
-  (6.68e-21 m/rtHz, about 7% noisier) passes in about 91-98%.
+  (6.68e-21 m/rtHz, about 8% noisier) passes in about 91-98%.
 - Re-optimizing the top 4 layers raised the quiet design from 64% to 70%
   and the sturdy one from 98% to 100% (50 trials, 2% errors, perfect
   measurement, all layers deposited with errors, including re-optimized
@@ -84,7 +84,7 @@ All work is computational, in Python, on a laptop.
 2. **Two reference designs.** 20-pair dual-wavelength end mirrors
    optimized with differential evolution for 5 ppm at 1064 nm and 2.5% at
    532 nm (the middle of the 1-4% window), with a noise penalty: one quiet
-   but fragile, one about 7% noisier but sturdy. The rescue aims at the
+   but fragile, one about 8% noisier but sturdy. The rescue aims at the
    same targets.
 3. **Errors.** Each deposited layer gets an independent random thickness
    error (standard deviation 0.5% to 3%). A common-factor error (all layers
