@@ -40,7 +40,10 @@ for (k, meas), rows in sorted(curves.items()):
     n = np.array([r[2] for r in rows])
     c0 = crossing(dep, p)
     boot = np.array([crossing(dep, rng.binomial(n, p) / n) for _ in range(NBOOT)])
-    boot = boot[np.isfinite(boot)]
-    lo68, hi68, lo95, hi95 = np.percentile(boot, [16, 84, 2.5, 97.5]) * 100
+    # below the first error step -> 0 (shown as "<1%"); above the last -> 99
+    boot = np.nan_to_num(boot, nan=0.0, posinf=0.99)
+    q = np.percentile(boot, [16, 84, 2.5, 97.5]) * 100
+    f = lambda x: "  <1% " if x == 0 else (" >3%  " if x > 90 else f"{x:.2f}%")
+    c = f(0.0 if np.isnan(c0) else min(c0, 0.99) * 100)
     m = "  -  " if meas == "" else f"{float(meas):.0%}".rjust(4) + " "
-    print(f" {k}  {m}  {c0*100:5.2f}%          {lo68:.2f}-{hi68:.2f}%      {lo95:.2f}-{hi95:.2f}%")
+    print(f" {k}  {m}  {c}          {f(q[0])}-{f(q[1])}      {f(q[2])}-{f(q[3])}")

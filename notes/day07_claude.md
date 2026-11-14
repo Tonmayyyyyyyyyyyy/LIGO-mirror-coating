@@ -27,6 +27,42 @@ What it says:
 - 2% measurement error lowers the gain a little (2.65 -> 2.40%), but
   still far above no rescue.
 
+## 2. A second design: is the sturdy result just one lucky design?
+
+Design `designs/seed2_t2.5.npy` (from the Day 3 search: 5.12 ppm, 2.45%,
+in between quiet and sturdy in robustness). Same fine scan as Day 5
+(400 trials) and same shared-error sweep as Day 6 (200 trials).
+Outputs: `results/day7/fine_seed2.csv`, `bootstrap_seed2.txt`,
+`common_seed2.csv`.
+
+Tolerable error at 95% pass (independent errors):
+
+| Rescue | Meas. | Sturdy (seed 9) | Middle (seed 2) |
+| --- | --- | --- | --- |
+| none | - | 1.69% (1.62-1.83) | 1.21% (1.14-1.33) |
+| k = 4 | 0% | 2.65% (2.48-2.82) | 1.76% (1.65-1.84) |
+| k = 4 | 1% | 2.61% (2.45-2.80) | 1.45% (1.30-1.56) |
+| k = 4 | 2% | 2.40% (2.10-2.55) | below 1% (worse than no rescue) |
+
+Shared error, seed 2: 68% -> 74% at 1% (k = 4), 38% -> 47% at 2%.
+
+What it says:
+- With good measurement the gain repeats on a second design: about 1.5x
+  the tolerable error in both (1.69 -> 2.65; 1.21 -> 1.76). So the main
+  result is not one lucky design.
+- But how much measurement error the rescue can stand depends on the
+  design. Sturdy: 2% measurement error is fine. Middle: 1% costs half the
+  gain, 2% makes things worse than no rescue (at 1% deposition error,
+  99% -> 88% pass). Quiet (Day 4): even 1% hurts.
+- So across three designs there is one clear pattern: the sturdier the
+  design, the more measurement error the rescue can tolerate. This is a
+  stronger, more general finding than the sturdy design alone, and it
+  answers research question 2 better.
+- Shared errors: the rescue gain is small on all three designs.
+
+Paper: present all three designs as a ladder (quiet, middle, sturdy).
+Methods Sec. 1.2 updated to mention the third design.
+
 ## 3. Why mirrors fail
 
 `scripts/day7_failures.py`, output `results/day7/failures.txt`. 200 mirrors
