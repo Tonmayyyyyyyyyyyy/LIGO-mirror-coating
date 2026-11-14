@@ -68,3 +68,29 @@ decision). Recomputed on all 32 designs that meet the spec
 - medians: no rescue 76%; rescue 92% / 89% / 78% at 0 / 1 / 2% measurement
 
 These numbers replace the 29-design ones above.
+
+## Shared-error population test (15 Nov)
+
+`scripts/population_shared.sh`: all 33 designs, one error shared by all
+layers, 1% and 2%, 200 mirrors (same for every design), k = 0 and 4,
+measurement 0 / 1 / 2%. Summaries: `results/population_shared/summary_dep0.01.txt`
+and `summary_dep0.02.txt`. Sample: the 32 designs that meet the spec.
+
+| | 1% shared error | 2% shared error |
+| --- | --- | --- |
+| Median pass, no rescue | 66% | 40% |
+| Median pass, rescue (meas 0 / 1 / 2%) | 76 / 74 / 69% | 48 / 46 / 42% |
+| Rescue raises pass rate, perfect measurement | 31 of 32 (18 beyond 2 s.e.) | 29 of 32 (14 beyond 2 s.e.) |
+| Best design after rescue | 92% (original sturdy) | 56% (original sturdy) |
+| Designs reaching 95% | 0 | 0 |
+
+- The Day 6 conclusion holds across the population: a shared error is much
+  harsher, rescue helps a little (median +10 points at 1%), and no design
+  reaches 95%.
+- The Day 6 numbers (73 -> 92% at 1%, 42 -> 56% at 2%) are reproduced
+  exactly for the original sturdy design, but that design turns out to be
+  the best of all 32 under shared error. So those were the best case, not
+  the typical case. Report the medians.
+- At 1% shared error, sturdier designs again lose less from measurement
+  error (rho = -0.88). At 2% everything fails so often that the pattern
+  is not clear (rho = -0.29, p = 0.10).

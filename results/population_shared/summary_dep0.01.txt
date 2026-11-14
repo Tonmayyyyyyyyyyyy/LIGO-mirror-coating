@@ -1,0 +1,55 @@
+33 designs. Test: 1% common deposition error, 200 mirrors (the same mirrors for every design), rescue = top 4 layers. Pass rates in %.
+
+design          T1064   T532  proxy  noise spec    k0  k4 m0 k4 m1 k4 m2   gain m0  gain m2
+seed21           6.35   2.67  0.972   6.40 NO      0     68    72    62      +68     +62
+seed1            5.55   2.67  0.994   6.50 ok     40     54    50    40      +14      +0
+seed22           5.12   2.46  0.911   6.18 ok     44     70    65    56      +25     +12
+seed23           5.11   2.47  0.912   6.18 ok     52     72    71    64      +21     +13
+seed4            4.74   2.49  0.997   6.51 ok     59     72    70    60      +12      +2
+seed15           5.15   2.69  0.911   6.18 ok     60     66    63    56       +7      -4
+lownoise_seed5_t2.5   5.31   2.47  0.915   6.19 ok     61     58    56    47       -3     -14
+seed24           4.80   2.58  0.918   6.20 ok     62     67    67    58       +6      -4
+seed28           5.06   2.57  0.915   6.19 ok     62     72    69    60      +11      -2
+seed19           5.02   2.65  0.977   6.44 ok     62     75    72    66      +12      +4
+seed25           5.07   2.42  0.922   6.21 ok     62     66    61    53       +4      -9
+seed7            5.17   2.50  0.919   6.21 ok     62     66    64    57       +4      -5
+seed13           4.98   2.63  0.920   6.21 ok     64     70    68    63       +6      -1
+seed10           4.75   2.64  1.012   6.57 ok     64     80    76    72      +16      +7
+seed12           4.46   2.46  1.051   6.72 ok     64     87    83    78      +22     +14
+seed29           5.07   2.54  0.918   6.20 ok     65     76    72    66      +11      +1
+seed14           5.09   2.61  1.049   6.71 ok     66     84    84    78      +18     +12
+seed16           5.16   2.45  0.993   6.50 ok     66     78    76    72      +12      +5
+seed5            5.07   2.39  0.915   6.19 ok     66     70    70    61       +4      -5
+seed6            5.17   2.46  0.926   6.23 ok     66     80    76    73      +14      +7
+seed18           5.13   2.47  0.915   6.19 ok     67     72    70    64       +5      -4
+seed8            5.13   2.49  0.922   6.22 ok     67     76    74    70       +9      +3
+seed2_t2.5       5.12   2.45  1.046   6.70 ok     68     74    74    69       +6      +1
+seed27           5.06   2.44  0.946   6.31 ok     68     84    82    76      +15      +8
+seed20           5.01   2.67  1.036   6.67 ok     68     74    74    72       +5      +3
+seed26           4.88   2.57  0.927   6.24 ok     70     76    74    70       +7      +1
+seed9            5.10   2.47  1.033   6.66 ok     70     78    78    73       +8      +4
+seed30           5.09   2.47  1.042   6.69 ok     70     76    76    70       +6      -1
+seed3            4.97   2.44  0.924   6.22 ok     72     79    77    76       +7      +5
+robust_seed9_t2.5   5.05   2.50  1.040   6.68 ok     73     92    89    87      +19     +14
+seed17           5.13   2.36  1.025   6.63 ok     74     83    82    80       +8      +6
+seed2            5.07   2.53  1.040   6.68 ok     74     88    86    83      +14      +8
+seed11           5.15   2.45  0.935   6.26 ok     76     85    84    82       +8      +5
+
+Designs meeting the spec at zero error: 32 of 33 (29 script-made, 3 originals). All of them form the sample.
+
+All 32 designs that meet the spec:
+  rescue raises pass rate, perfect measurement: 31 of 32
+    ... by more than 2 standard errors: 18 of 32
+  rescue raises pass rate, 1% measurement error: 30 of 32
+  rescue raises pass rate, 2% measurement error: 21 of 32
+  rescue LOWERS pass rate, 2% measurement error: 10 of 32
+    ... by more than 2 standard errors: 1 of 32
+  already >= 95% without rescue: 0 of 32
+
+Spearman rank correlations (all designs that meet the spec):
+  noise proxy vs sturdiness (k0 pass rate): rho = +0.50, p = 0.003
+  sturdiness vs rescue gain at perfect measurement: rho = -0.11, p = 0.534
+  sturdiness vs rescue gain at 2% measurement error: rho = +0.29, p = 0.103
+  sturdiness vs pass-rate loss from 0 to 2% measurement error: rho = -0.88, p = 0.000
+
+Median over all designs that meet the spec: k0 66%, k4 m0 76%, k4 m1 74%, k4 m2 69%
