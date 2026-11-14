@@ -31,8 +31,8 @@ thermal noise in the re-optimization.
 
 ## Research question
 
-For an aLIGO-style end mirror (SiO2/Ti:Ta2O5, 20 layer pairs plus a
-half-wave silica cap, dual-wavelength spec), if only the top k layers are
+For an aLIGO-style end mirror (SiO2/Ti:Ta2O5, 40 layers including a
+half-wave silica cap on top, dual-wavelength spec), if only the top k layers are
 re-optimized after the rest have been deposited with random errors:
 
 1. How much larger can the deposition errors be while still keeping 95% of
@@ -81,7 +81,7 @@ All work is computational, in Python, on a laptop.
    Brownian noise from Hong et al. (2013), both through the open-source
    OptimalBragg package (Caltech). The fast E0900068 proxy is used inside
    optimization loops; the full formula is used for final numbers.
-2. **Two reference designs.** 20-pair dual-wavelength end mirrors
+2. **Two reference designs.** 40-layer dual-wavelength end mirrors
    optimized with differential evolution for 5 ppm at 1064 nm and 2.5% at
    532 nm (the middle of the 1-4% window), with a noise penalty: one quiet
    but fragile, one about 8% noisier but sturdy. The rescue aims at the

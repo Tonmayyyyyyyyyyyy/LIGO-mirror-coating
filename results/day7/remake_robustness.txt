@@ -1,0 +1,7 @@
+No-rescue pass rate, independent errors, 500 mirrors (same mirrors for every design)
+lownoise_seed5_t2.5    1%: 0.91   2%: 0.67
+remade_seed5           1%: 0.97   2%: 0.75
+seed2_t2.5             1%: 0.99   2%: 0.80
+remade_seed2           1%: 1.00   2%: 0.89
+robust_seed9_t2.5      1%: 1.00   2%: 0.95
+remade_seed9           1%: 1.00   2%: 0.89
