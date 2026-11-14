@@ -31,7 +31,7 @@ A warm coating also shakes a tiny bit on its own (Brownian thermal
 noise), and this shaking is one of the main noise sources in LIGO. We
 compute this noise following Hong \emph{et al.}~\cite{Hong2013}, as
 implemented in \textsc{OptimalBragg}, with a laser beam radius of
-6.2~cm and a temperature of 295~K. We report it as the amplitude
+6.2~cm (the Advanced LIGO end-mirror value~\cite{aLIGO2015}) and a temperature of 295~K. We report it as the amplitude
 spectral density at 100~Hz. Inside optimization loops we use a faster
 stand-in: the sum of each material's total thickness weighted by its
 loss angle and stiffness, following LIGO document E0900068. The full
@@ -104,8 +104,11 @@ region we use steps of 0.25\%.
 
 For comparison, the Monte Carlo shipped with \textsc{OptimalBragg}
 uses one shared error for all layers (the whole stack gets thicker or
-thinner together). [[After the Day-6 check, add one sentence with the
-result of running our test with that shared-error model.]]
+thinner together). We also ran our test with that shared-error model.
+It is much harsher: at a 1\% error the sturdy design passes 73\% of the
+time (against 100\% with independent errors), and rescuing the top four
+layers raises this to 92\%; at 2\% the rescue only lifts it from 42\% to
+56\%. We report both models in the results.
 
 \subsection{The rescue step}
 
@@ -148,5 +151,6 @@ Python, with fixed random seeds, and is available at
 % Hong2013       - Phys. Rev. D 87, 082001 (2013)
 % E0900068       - LIGO document E0900068-v5
 % MaterialsSource - arXiv 0912.0107 (title and authors to confirm)
+% aLIGO2015     - Class. Quantum Grav. 32, 074001 (2015), arXiv 1411.4547
 % Harry2002      - Class. Quantum Grav. 19, 897 (2002), first coating
 %                  Brownian noise formula (cite in the introduction)
