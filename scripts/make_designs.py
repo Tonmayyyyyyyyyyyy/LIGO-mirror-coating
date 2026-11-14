@@ -8,7 +8,8 @@ Layer 0 (half-wave SiO2 cap) is fixed; the other 40 layers may vary between
 0.3x and 1.7x their quarter-wave thickness. Differential evolution, popsize 8,
 maxiter 400, Sobol start, polish on. Only the random seed differs.
 
-Usage: python3 scripts/make_designs.py 5   (writes designs/remade_seed5.npy)
+Usage: python3 scripts/make_designs.py 5 [output.npy]
+(default output: designs/remade_seed5.npy)
 The designs used in the paper are the saved files in designs/; this script
 checks whether the method gives them back.
 """
@@ -20,7 +21,7 @@ sys.path.insert(0, ".")
 import rescue
 
 seed = int(sys.argv[1])
-L0 = rescue.STACK["Ls"].copy() if False else None
+out = sys.argv[2] if len(sys.argv) > 2 else f"designs/remade_seed{seed}.npy"
 from OptimalBragg import Material, qw_stack
 from OptimalBragg.materials import SiO2, TiTa2O5, air
 sub = Material(SiO2); sub.Temp = 295
@@ -43,7 +44,7 @@ res = differential_evolution(cost, [(0.3 * L, 1.7 * L) for L in L0[1:]], seed=se
                              init="sobol")
 L = L0.copy(); L[1:] = res.x
 T1, T2 = rescue.transmissions(L)
-np.save(f"designs/remade_seed{seed}.npy", L)
+np.save(out, L)
 print(f"seed {seed}: {time.time()-t:.0f}s, T1064 {T1*1e6:.2f} ppm, T532 {T2:.2%}, "
       f"proxy/QW {rescue.noise_proxy(L)/P0:.3f}")
 for name in ("lownoise_seed5", "seed2", "robust_seed9"):
