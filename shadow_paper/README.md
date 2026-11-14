@@ -637,16 +637,21 @@ kind of error the real Advanced LIGO end mirrors had.
 
 ## Appendix A: Can the designs be re-made?
 
-The three designs were made on Day 3 with the method in 2.5. That code was
-run interactively and was not saved as a script at the time. Only the
-finished design files were saved. To close this gap we wrote
-`scripts/make_designs.py`, which follows the method in 2.5 exactly, and
-checked whether it gives the same designs back. The result of that check is
-written below.
+**The three designs are the original Day 3 outputs.** Scratch copies saved
+at the same minute as the locked files (00:43, 14 Nov) are identical to
+them, to the last digit. Git also holds them from the Day 3 commit onward.
+So every result in this paper comes from the original designs.
 
-**Result: the method gives back the same *kind* of design, but not the
-same layer thicknesses.** (`results/day7/remake_seed*.txt`,
-`results/day7/remake_robustness.txt`; each re-make takes about 35 s.)
+**What is missing is the code that made them.** The Day 3 seed search was
+run interactively and its code was not saved as a script. Searching the
+session record did not recover it.
+
+**What we tried.** `scripts/make_designs.py` follows the method in 2.5 as
+closely as we could write it down. Re-running it gives designs of the same
+two kinds (seed 5 is quiet and fragile; seeds 2 and 9 are noisier and
+sturdier), but the layers differ by up to 30-80%. So the settings we
+wrote down (population size, generations, starting points) are not the
+ones used on Day 3. We do not know which setting differs.
 
 | Seed | Original: T1064, T532, proxy | Re-made: T1064, T532, proxy | Pass at 2% error, no rescue (original → re-made) |
 | --- | --- | --- | --- |
@@ -654,18 +659,12 @@ same layer thicknesses.** (`results/day7/remake_seed*.txt`,
 | 2 (middle) | 5.12 ppm, 2.45%, 1.046 | 5.07 ppm, 2.53%, 1.040 | 80% → 89% |
 | 9 (sturdy) | 5.05 ppm, 2.50%, 1.040 | 5.10 ppm, 2.47%, 1.033 | 95% → 89% |
 
-(500 mirrors, same random mirrors for every design.)
+(500 mirrors, same random mirrors for every design; `results/day7/remake_robustness.txt`.)
 
-Single layers differ by up to 29-45% between an original and its re-make,
-so some setting of the Day 3 runs was different from what we wrote down
-(most likely the population size or the number of generations). The
-pattern is the same, though: seed 5 again gives a quieter (proxy 0.915),
-more fragile design, and seeds 2 and 9 give noisier, sturdier ones.
-
-What this means for the paper: the results are fully reproducible **from
-the saved design files**. Someone who re-runs our design method will get
-designs of the same two kinds, but not identical ones, and their exact
-numbers will differ. This must be stated in the real paper.
+**What this means.** The results are fully reproducible from the design
+files, which are in the repository. The design *generator* is not
+reproducible exactly, and the paper must say so. Anyone can repeat the
+whole study from the saved designs.
 
 ## Appendix B: Where everything is
 
