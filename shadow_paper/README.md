@@ -694,6 +694,12 @@ top-layer rescue like ours would only partly help with such an error.
 - The rescue runs on every mirror, once, before the last 4 layers. Other
   rules (rescue only when needed, rescue after every layer, other *k*) were
   not tested on the population.
+- We did not check whether the re-designed layers are practical to make.
+  The rescue is kept within 0.5-1.5x of the planned thickness, and the
+  re-made layers get deposition errors like all others, but we did not
+  measure how far the new layers move, how often they hit those limits, or
+  how thin they get. Real machine limits (rate control, monitoring,
+  changing the recipe during a run) are not modelled.
 - One kind of mirror, two materials. Future detectors use other materials
   and targets.
 - 32 designs, all from one optimizer with one cost. A different design
