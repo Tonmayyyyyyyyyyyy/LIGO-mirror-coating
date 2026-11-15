@@ -1,44 +1,46 @@
-# Shadow paper: Fixing LIGO mirror coatings while they are being made
+# Shadow paper: Can we fix LIGO mirror coatings while they are being made?
 
-**What this file is.** A full version of our paper, written by Claude in very
-simple words, so that we can see exactly what we did. It is a study copy.
-It is **not** the paper we submit. Journals do not accept text written by
-AI, so Tonmay writes the real paper himself, using this only as a fact sheet.
-Every number here comes from a file in this repository; the file is named
-next to it.
+**What this file is.** A full version of our paper, written by Claude in
+very simple words, so that we can see exactly what we did. It is a study
+copy, **not** the paper we submit. Journals do not accept text written by
+AI, so Tonmay writes the real paper himself and uses this only as a fact
+sheet. Every number here comes from a file in this repository, and the file
+is named next to it.
 
-Status: all computation finished (14 Nov 2026).
+Version 2, written from scratch on 15 Nov 2026 around the 32-design study.
+Version 1 (built on three designs) is in the git history.
 
 ---
 
 ## Summary (abstract)
 
-LIGO's mirrors are covered by a coating of 40 thin layers of glass-like
-material. Each layer must have the right thickness. In real coating
-machines, every layer comes out a little too thick or too thin. A mirror
-whose layers are too far off fails its specification and is wasted.
+LIGO's mirrors carry a coating of 40 thin layers. Every layer must have the
+right thickness, but coating machines always make each layer a little too
+thick or too thin. If the mistakes are too big, the mirror fails its
+specification.
 
-We tested a simple idea in computer simulations: after most layers are
-made, measure them, and then re-design the last few layers so that they
-cancel the mistakes below. We call this the *rescue*. We used a mirror like
-the Advanced LIGO end mirror, which must reflect two colours of laser light
-in a precise way: it must let through 4 to 6 parts per million (ppm) of the
-infrared light (1064 nm) and 1% to 4% of the green light (532 nm).
+We asked: **can** we save such mirrors by measuring the layers already
+made and then re-designing the last few layers to cancel the mistakes? We
+call this the *rescue*. We tested it in computer simulations on a mirror
+like the Advanced LIGO end mirror, which must let through 4 to 6 parts per
+million of the infrared light (1064 nm) and 1% to 4% of the green light
+(532 nm). We did not trust one design: we made 32 different designs that all
+meet the specification and tested every one the same way.
 
-For a robust ("sturdy") mirror design, re-designing the top 4 layers raised
-the largest thickness error that still lets 95% of mirrors pass from about
-1.7% to about 2.6%. This held even when the measurement of the layers was
-off by 1% to 2%. For a second design the gain was similar with perfect
-measurement, but it vanished when measurement was off by 2%. For a fragile,
-lower-noise design the rescue gave no gain and often made things worse. When
-all layers are off by the *same* amount (a "shared" error, which really
-happened to the Advanced LIGO end mirrors), the rescue helped only a little.
-The rescue did not change the mirror's thermal noise (change about -0.2%).
+When each layer has its own random error and the layers are measured
+perfectly, the rescue of the top 4 layers raised the largest error that
+still lets 95% of mirrors pass from 1.14% to 1.71% for the typical (median)
+design. It helped 30 of the 32 designs. With 1% measurement error it still
+helped 25 of 32 (typical 1.58%). With 2% measurement error it made things
+worse for 25 of 32, because it "repaired" mirrors that were already fine.
+When all layers are off by the *same* amount, the rescue helped a little
+(typical pass rate 66% to 76% at 1% error) but no design reached 95%.
+The rescue did not change thermal noise (median change −0.02%).
 
-In short: the rescue lets a sturdy design tolerate bigger random mistakes,
-but only if the layers can be measured well. It cannot save a fragile
-design, and it cannot fix a machine that is always off in the same
-direction.
+So: yes, the rescue can make mirrors tolerate about 1.4 times bigger random
+errors, but only if layers are measured to about 1% or better. It probably
+can't save mirrors when measurement is off by 2%, and it can't fix a
+machine that is off in the same direction for every layer.
 
 ---
 
@@ -46,137 +48,132 @@ direction.
 
 ### 1.1 LIGO and its mirrors
 
-LIGO detects gravitational waves. These are tiny stretches and squeezes of
-space, made by events like two black holes merging. LIGO measures them with
-laser light that bounces between mirrors 4 km apart. A gravitational wave
-changes this distance by much less than the size of a proton.
+LIGO detects gravitational waves: tiny stretches and squeezes of space made
+by events such as two black holes merging. It measures them with laser light
+bouncing between mirrors 4 km apart. A passing wave changes that distance by
+much less than the size of a proton.
 
 The mirrors are heavy glass blocks covered by a coating. The coating is a
 stack of thin layers of two materials:
 
-- silica (SiO2), which has a low refractive index (1.45), and
-- titania-doped tantala (Ti:Ta2O5), which has a high refractive index (2.06).
+- silica (SiO2), low refractive index (1.45), and
+- titania-doped tantala (Ti:Ta2O5), high refractive index (2.06).
 
-Light reflects a little at every boundary between the two materials. If
-every layer has the right thickness, all these small reflections add up and
-the mirror reflects almost all the light.
+Light reflects a little at every boundary between the two. If every layer
+has the right thickness, the small reflections add up and the mirror
+reflects almost everything.
 
-### 1.2 Why the coating matters so much
+### 1.2 Two things the coating must get right
 
-The coating causes two kinds of problems.
+**Thermal noise.** The atoms in a warm coating jiggle, so the mirror surface
+moves a tiny bit, and LIGO sees this as noise. This "coating Brownian noise"
+is the largest thermal noise in LIGO's mirrors (Advanced LIGO paper, 2015).
+Tantala is the main cause, so designers like to use less of it.
 
-**Thermal noise.** The atoms in a warm coating jiggle. This makes the mirror
-surface move a tiny bit, and LIGO sees that as noise. This "coating
-Brownian noise" is the biggest of the thermal noises in LIGO's mirrors
-(Advanced LIGO paper, 2015). The tantala layers are the main source: they
-are "lossier" (they turn more vibration energy into heat) than silica. So
-designers like to use less tantala.
+**The light targets.** The end mirror has two jobs at once (LIGO document
+E0900068):
 
-**Getting the light right.** The end mirror has two jobs at once
-(LIGO document E0900068):
+- At 1064 nm (the main laser), it must let through 5 ± 1 ppm, so 4 to 6 ppm.
+- At 532 nm (a green laser used to control the arms), it must let through
+  1% to 4%.
 
-- At 1064 nm (the main infrared laser), it must let through only
-  5 ± 1 ppm of the light, so between 4 and 6 ppm.
-- At 532 nm (a green laser used to lock and control the arms), it must let
-  through between 1% and 4%.
-
-Hitting both targets needs every layer thickness to be right.
+Hitting both needs every layer to be the right thickness.
 
 ### 1.3 The problem: layers never come out perfect
 
-Coating machines deposit one layer at a time, from the glass up. Each layer
-comes out slightly thicker or thinner than planned, often by about 1% or a
-few nanometres. Small mistakes add up.
+Coating machines make one layer at a time, from the glass upward. Each layer
+comes out slightly off, often by about 1% or a few nanometres.
 
-This really happened. The Advanced LIGO paper (Section 4.3) says that for
-the end mirrors "a systematic error in the layer thicknesses left the
+This has really happened. The Advanced LIGO paper (Section 4.3) says that
+for the end mirrors "a systematic error in the layer thicknesses left the
 1064 nm transmission in spec, but caused the 532 nm transmission to be
-larger than desired by an order of magnitude". So the green-light target
-was missed by about 10 times, and that made the detector harder to control.
+larger than desired by an order of magnitude". The green target was missed
+by about ten times.
 
 ### 1.4 What others have done
 
 - **Venugopalan et al. 2024** (Caltech, the OptimalBragg code) designed
-  LIGO-type coatings with a global optimizer and then checked them with
-  random errors of about 0.5%. Their design is fixed before the coating is
-  made.
-- **Pierro et al. 2021** searched many multi-material quarter-wave designs.
-  Their robustness test was about absorption, not thickness.
-- **Pierro et al. 2026** made ternary (three-material) coatings at LMA with
-  fixed designs and checked them with independent ±0.5 nm errors.
-- In general optics (not gravitational waves), there is a known method:
-  measure the layers while coating and re-optimize the layers not yet
-  made (Tikhonravov and Trubetskov; Fraunhofer IOF, Wilbrandt et al. 2008;
-  Melzig et al. 2024).
+  LIGO-type coatings and checked them with random errors of about 0.5%. The
+  design is fixed before coating starts.
+- **Pierro et al. 2021** searched many multi-material designs. Their
+  robustness test was about absorption, not thickness.
+- **Pierro et al. 2026** made three-material coatings at LMA with fixed
+  designs and checked them against ±0.5 nm errors.
+- In general optics (not gravitational waves), measuring the layers during
+  coating and re-optimizing the layers not yet made is a known method
+  (Tikhonravov and Trubetskov 2012; Wilbrandt et al. 2008 at Fraunhofer
+  IOF; Melzig et al. 2024).
 - **Poitras and Ma 2025** simulated re-optimizing after every layer for
   laser facet coatings.
 
-As far as our search found, nobody has tested this kind of correction for
-a gravitational-wave mirror, with its two-colour target and its thermal
-noise. Our search was not complete, so we say "we did not find", not "it
-has never been done". Coating labs may also do this privately without
-publishing it.
+We did not find a study that tests this for a gravitational-wave mirror,
+with its two-colour target and its thermal noise. Our search was not
+complete and coating labs may do it without publishing, so we say "we did
+not find", not "it has never been done".
 
 ### 1.5 Our question
 
-For an end mirror like Advanced LIGO's, if we re-design only the top *k*
-layers after the rest have been made with random errors:
+The main question is a yes-or-no one:
+
+> **Can re-designing only the top few layers, after the rest of an Advanced
+> LIGO-style end mirror has been made with thickness errors, let the mirror
+> tolerate larger errors?**
+
+We split it into three parts:
 
 1. How much bigger can the thickness errors be while 95% of mirrors still
    pass?
 2. How does this depend on how well the made layers can be measured?
 3. Does the rescue cost anything in thermal noise?
 
-### 1.6 Scope (what we did and did not do)
+Because the question starts with "can", a clear "no, probably not" in some
+situation is also an answer, not a failure. We report those cases as
+plainly as the "yes" ones.
 
-- Everything is a computer simulation. No coating was made.
-- One type of mirror: a 40-layer silica/tantala end mirror with the
-  Advanced LIGO two-colour targets.
-- Only thickness errors. No errors in refractive index, no absorption, no
-  uneven layers.
-- The rescue happens once, before the last *k* layers, not after every
-  layer.
+### 1.6 Scope
 
-### 1.7 What we expected (before running the full study)
+- Computer simulation only. No coating was made.
+- One kind of mirror: a 40-layer silica/tantala end mirror with the Advanced
+  LIGO two-colour targets.
+- Only thickness errors. No index errors, no absorption, no uneven layers.
+- The rescue happens once, just before the last 4 layers, and is applied to
+  every mirror.
 
-We wrote down two possible outcomes in the proposal:
+### 1.7 What we expected
 
-- Rescue of 2 to 4 layers raises the tolerable error clearly (for example
-  from about 1% to 2-3%), even with realistic measurement error, at almost
-  no noise cost; or
-- The gain disappears quickly as measurement error grows. Then the useful
-  result is how good the measurement must be.
+Written in the proposal before the main runs:
 
-On Day 3 we added a hope: maybe the rescue could make a fragile, quieter
-design as reliable as a sturdy one.
+- Either the rescue clearly raises the tolerable error (for example from
+  about 1% to 2-3%), even with realistic measurement error, at almost no
+  noise cost;
+- or the gain disappears quickly as measurement error grows, and the
+  useful result is how good the measurement must be.
+
+On Day 3 we added a hope: maybe the rescue could make a quiet but fragile
+design as reliable as a noisier, sturdy one.
 
 ---
 
 ## 2. Methods
 
-Everything below can be re-run from the code in this repository. Commands
-are given for each step. All code is Python 3. Install with
-`pip3 install -r requirements.txt` (OptimalBragg 1.0.2, numpy, scipy,
-matplotlib, pytest). Run the tests with `python3 -m pytest -q tests`
-(6 tests; all pass).
+Everything here can be re-run from the repository. All code is Python 3.
+Install with `pip3 install -r requirements.txt` (OptimalBragg 1.0.2, numpy,
+scipy, matplotlib, pytest). Tests: `python3 -m pytest -q tests` (6 tests,
+all pass).
 
 ### 2.1 The mirror
 
-- 40 layers in total, alternating high and low index: 20 tantala layers
-  and 20 silica layers. The top layer (next to air) is a thicker silica
-  layer, a "half-wave cap" of 366.9 nm. Below it the pattern is
-  H, L, H, L, ..., H (39 layers), sitting on a silica substrate.
-- Layer numbering follows OptimalBragg: layer 0 is the top (the cap, made
-  last); layer 39 is next to the glass (made first).
-- Starting stack: the plain "quarter-wave" stack at 1064 nm (each layer a
-  quarter wavelength thick inside the material: 129.1 nm for tantala,
-  183.4 nm for silica), built with `qw_stack(1064 nm, substrate, air,
-  films, "HL"*19 + "H", hwcap="L")`. Code: `rescue.py`, `build_stack()`.
+- 40 layers in total: 20 tantala (H) and 20 silica (L), alternating. The top
+  layer, next to air, is a thicker silica layer, a "half-wave cap"
+  (366.9 nm). Below it the pattern is H, L, H, ..., H (39 layers), on a
+  silica substrate.
+- Numbering follows OptimalBragg: layer 0 is the top (the cap, made last);
+  layer 39 touches the glass (made first).
+- Starting stack: the plain quarter-wave stack at 1064 nm (129.1 nm per
+  tantala layer, 183.4 nm per silica layer), made with
+  `qw_stack(1064 nm, substrate, air, films, "HL"*19 + "H", hwcap="L")`.
+  Code: `rescue.py`, `build_stack()`.
 - Substrate temperature setting: 295 K.
-
-*Correction found while writing this:* earlier drafts (`PROPOSAL.md`,
-`paper/method.tex`) said "40 layers (20 pairs) plus a half-wave cap". That
-is wrong. The 40 layers **include** the cap.
 
 Material values (from OptimalBragg, which cites arXiv:0912.0107):
 
@@ -187,484 +184,517 @@ Material values (from OptimalBragg, which cites arXiv:0912.0107):
 | Poisson ratio | 0.17 | 0.23 |
 | Mechanical loss angle | 5 × 10⁻⁵ | 2 × 10⁻⁴ |
 
-The same refractive indices are used at both wavelengths (OptimalBragg
-stores one value per material).
+The same index is used at both wavelengths (OptimalBragg stores one value).
 
-### 2.2 How we compute the light
+### 2.2 Computing the light
 
-Transmission at 1064 nm and at 532 nm, light hitting the mirror straight
-on, using the transfer-matrix method (`OptimalBragg.layers.trans`). This is
-the standard textbook way: each layer is a 2×2 matrix, and multiplying them
-gives the whole stack. Code: `rescue.transmissions(Ls)`.
+Transmission at 1064 nm and 532 nm, light hitting straight on, by the
+transfer-matrix method (`OptimalBragg.layers.trans`): each layer is a 2×2
+matrix, and multiplying them gives the whole stack. Code:
+`rescue.transmissions(Ls)`.
 
-Check: a single quarter-wave tantala layer on glass gives the textbook
+Check: one quarter-wave tantala layer on glass gives the textbook
 reflectance ((nₛ − n₁²)/(nₛ + n₁²))² to better than 10⁻⁶
 (`tests/test_rescue.py`).
 
-### 2.3 How we compute thermal noise
+### 2.3 Computing thermal noise
 
-**Full formula (for all reported noise numbers).** Coating Brownian noise
-from Hong et al. 2013, as written in OptimalBragg
-(`OptimalBragg.noise.coating_brownian`). Laser beam radius 6.2 cm (the
-Advanced LIGO end-mirror value, Advanced LIGO paper, Tables 1 and 3).
-Reported as amplitude spectral density at 100 Hz, in m/√Hz.
+**Full formula** (for reported noise values): Hong et al. 2013, as written in
+OptimalBragg (`OptimalBragg.noise.coating_brownian`). Beam radius 6.2 cm
+(Advanced LIGO end mirror, Advanced LIGO paper Tables 1 and 3). Reported as
+amplitude spectral density at 100 Hz, in m/√Hz.
 
-**Quick stand-in (inside optimizers only).** The full formula is slow, so
-inside optimization loops we use the stand-in from LIGO document E0900068:
+**Quick stand-in** (inside optimizers and Monte Carlo runs): from E0900068,
 
 > proxy = (total silica thickness) + γ_H × (total tantala thickness),
-> with γ_H = 3.888 (from `OptimalBragg.noise.brownian_proxy`).
+> γ_H = 3.888 (`OptimalBragg.noise.brownian_proxy`).
 
-γ_H says how much worse a nanometre of tantala is than a nanometre of
-silica. Code: `rescue.noise_proxy(Ls)`. In Section 3.6 we check that the
-stand-in and the full formula agree.
+Code: `rescue.noise_proxy(Ls)`. Section 3.7 checks that the stand-in agrees
+with the full formula.
 
-Loss angle choice: other papers use 3.6 × 10⁻⁴ for tantala (Venugopalan et
-al. 2024). With that value every noise number rises by 26-29%, but pass
-rates do not change at all, because passing depends only on light, and all
-our noise results are comparisons. (Quiet design: 6.185 → 7.764 × 10⁻²¹;
-sturdy: 6.678 → 8.584 × 10⁻²¹ m/√Hz.)
+If tantala's loss angle is 3.6 × 10⁻⁴ instead (as in Venugopalan et al.),
+every noise value rises by 26-29%, but no pass rate changes, because passing
+depends only on light.
 
 ### 2.4 The pass test
 
-A mirror **passes** if both are true (E0900068):
+A mirror **passes** if 4 ppm ≤ T(1064) ≤ 6 ppm **and** 1% ≤ T(532) ≤ 4%
+(E0900068). Noise is not part of the test. Code: `rescue.passes(Ls)`.
 
-- 4 ppm ≤ T(1064 nm) ≤ 6 ppm
-- 1% ≤ T(532 nm) ≤ 4%
+### 2.5 The 32 designs
 
-Noise is **not** part of the pass test. Code: `rescue.passes(Ls)`.
+A design is a list of 40 layer thicknesses. Many different designs meet the
+targets, and they differ in how well they survive errors. So we tested a
+whole set of designs, not one.
 
-### 2.5 The three designs
-
-All three were made by the same optimizer (differential evolution, SciPy),
-with the same cost, from different random starting points ("seeds"):
+**How a design is made.** Differential evolution (SciPy) minimizes
 
 > cost = 5 × [max(0, log₁₀(T₁₀₆₄ / 5 ppm))]² + 3 × [log₁₀(T₅₃₂ / 0.025)]²
 > + 0.5 × (proxy / proxy of the plain quarter-wave stack)
 
-In words: get 1064 nm down to 5 ppm (going lower is not punished), get
-532 nm close to 2.5%, and keep the noise stand-in small. Layer 0 (the cap)
-is fixed. The other 39 layers may change between 0.3× and 1.7× their
-quarter-wave thickness. Settings: population size 8, at most 400
-generations, Sobol starting points, final local polish.
+In words: get 1064 nm down to 5 ppm (lower is not punished), get 532 nm to
+2.5% (the middle of the 1-4% window, so errors have room both ways), and
+keep the noise stand-in small. The cap (layer 0) is fixed. The other 39
+layers may be 0.3× to 1.7× their quarter-wave thickness. Settings:
+population 8, at most 400 generations, tol 10⁻¹⁰, Sobol starting points,
+final polish. Only the random seed changes between designs.
 
-We aimed at 2.5% because it is in the middle of the 1-4% window, so errors
-have room on both sides (Tonmay's decision, Day 3).
+Command: `python3 scripts/make_designs.py SEED designs/population/seedSEED.npy`
 
-| Design | File | Seed | T(1064) | T(532) | Proxy / quarter-wave | Full noise at 100 Hz |
-| --- | --- | --- | --- | --- | --- | --- |
-| Quiet | `designs/lownoise_seed5_t2.5.npy` | 5 | 5.31 ppm | 2.47% | 0.915 | 6.19 × 10⁻²¹ m/√Hz |
-| Middle | `designs/seed2_t2.5.npy` | 2 | 5.12 ppm | 2.45% | 1.046 | 6.70 × 10⁻²¹ m/√Hz |
-| Sturdy | `designs/robust_seed9_t2.5.npy` | 9 | 5.05 ppm | 2.50% | 1.040 | 6.68 × 10⁻²¹ m/√Hz |
+**The set.**
 
-For comparison, the plain quarter-wave stack has 6.53 × 10⁻²¹ m/√Hz (but
-fails the green-light target: 96.6% at 532 nm).
+- 30 designs from seeds 1 to 30 (`designs/population/`). The script and the
+  seed list were committed before any results. Seed 21 fails the 1064 nm
+  target even with no errors (6.35 ppm), so it is left out. That gives 29.
+- 3 designs made on Day 3 with the same kind of optimizer, before the script
+  existed (`designs/lownoise_seed5_t2.5.npy`, `designs/seed2_t2.5.npy`,
+  `designs/robust_seed9_t2.5.npy`). The Day 3 code was not saved, and the
+  script does not re-make them exactly (Appendix A). They are treated as
+  ordinary members of the set.
 
-The quiet design is about 7% quieter than the sturdy one. The middle and
-sturdy designs have almost the same noise, but different robustness (see
-results). The designs used in the paper are the saved files above.
-See Appendix A about re-making them.
+Total: **32 designs**, all meeting the spec with no errors.
 
-### 2.6 How layers are made wrong (deposition error)
+Across the 32 designs, full noise at 100 Hz goes from 6.18 to 6.72 × 10⁻²¹
+m/√Hz (about 9% apart). For comparison, the plain quarter-wave stack has
+6.53 × 10⁻²¹ m/√Hz but fails the green target (96.6% at 532 nm).
+Per-design values: `results/population/summary.txt`.
 
-The true thickness of layer *i* is
+### 2.6 How layers come out wrong (deposition error)
+
+True thickness of layer *i*:
 
 > dᵢ = dᵢ⁽⁰⁾ × (1 + εᵢ)
 
-where dᵢ⁽⁰⁾ is the planned thickness and εᵢ is a random number from a
-normal (bell-curve) distribution with mean 0 and standard deviation σ.
+dᵢ⁽⁰⁾ is the planned thickness; εᵢ is random, from a bell curve with mean 0
+and standard deviation σ (the "deposition error").
 
-Two versions:
-
-- **Independent errors (main model):** every layer gets its own εᵢ.
-- **Shared error:** one ε for all 40 layers, including the re-made ones.
-  This is like a machine that is always a bit off in the same direction.
-  The Monte Carlo inside OptimalBragg uses this kind of error.
-
-σ values tested: 0.25% to 3%. Exact grids are given in 2.9.
+- **Independent errors (main model):** each layer gets its own εᵢ.
+- **Shared error:** one ε for all 40 layers, including the re-made ones. Like
+  a machine that is always off in the same direction. (OptimalBragg's own
+  Monte Carlo uses this kind.)
 
 ### 2.7 How layers are measured (measurement error)
 
-The machine does not see the true thicknesses. It sees
+The machine does not see true thicknesses. It sees
 
-> measured thickness = true thickness × (1 + μᵢ)
+> measured = true × (1 + μᵢ)
 
-with μᵢ normal, mean 0, standard deviation σ_meas, a new μᵢ for every
-layer. σ_meas values: 0, 1%, 2% (and 0.25%, 0.5% in the Day 4 sweep).
+with μᵢ from a bell curve with mean 0 and standard deviation σ_meas, new for
+every layer. σ_meas = 0, 1%, 2%. Code: `rescue.measure()`.
 
-Why we sweep it instead of picking one value: no source gives one agreed
-accuracy. Sources for the size: typical deposition errors about 1 nm + 1%
-(Tikhonravov and Trubetskov 2012); run-to-run spread 0.9-1.5% and optical
-vs quartz-crystal readings about 2.6% apart (Wilbrandt et al. 2008); fitted
-thicknesses off by up to about 4 nm per layer (Melzig et al. 2024).
+We sweep it because no source gives one agreed value. Sources for its size:
+typical deposition errors about 1 nm + 1% (Tikhonravov and Trubetskov 2012);
+run-to-run spread 0.9-1.5%, and optical vs quartz-crystal readings about
+2.6% apart (Wilbrandt et al. 2008); fitted thicknesses off by up to about
+4 nm per layer (Melzig et al. 2024).
 
-Code: `rescue.measure()`.
+### 2.8 One simulated mirror, step by step
 
-### 2.8 One simulated mirror, step by step (the rescue)
+Code: `rescue.trial()`. Inputs: design, rescue size *k*, σ, σ_meas.
 
-Code: `rescue.trial()`. For a design L, rescue size *k*, deposition error σ
-and measurement error σ_meas:
+1. Draw εᵢ for **every** layer, 0 to 39 (shared model: one ε copied to all).
+   Drawing them all first means the same mirror can be compared with and
+   without rescue.
+2. Make layers *k*+1 to 39 with their errors. Layers 0 to *k* are not made
+   yet.
+3. Measure layers *k*+1 to 39, with measurement error.
+4. **Rescue.** Using only the *measured* thicknesses, find new thicknesses
+   for layers 1 to *k* (the cap, layer 0, never changes) that minimize
 
-1. Draw a deposition error εᵢ for **every** layer, 0 to 39 (for the shared
-   model, one ε copied to all). Drawing all of them first means the same
-   mirror can be compared for different *k*.
-2. Make layers *k*+1 to 39 with their errors: dᵢ = dᵢ⁽⁰⁾(1 + εᵢ).
-   Layers 0 to *k* are "not made yet".
-3. Measure layers *k*+1 to 39 with measurement error (2.7).
-4. **Rescue:** using only the *measured* thicknesses, find new thicknesses
-   for layers 1 to *k* (the cap, layer 0, is never changed). This
-   minimizes
    > cost = 5 × [log₁₀(T₁₀₆₄ / 5 ppm)]² + 3 × [log₁₀(T₅₃₂ / 2.5%)]²
    > + 0.05 × (proxy / proxy of the design)
 
-   Each new thickness may be between 0.5× and 1.5× its planned value.
-   Optimizer: L-BFGS-B (SciPy `minimize`), started three times (from the
-   planned thicknesses, from 0.9×, and from 1.1×); the best of the three
-   is kept.
-5. Make layers 0 to *k* (the cap and the *k* new layers) **with the same
-   errors εᵢ drawn in step 1**. The rescue does not get perfect layers.
-6. Judge the finished mirror on its **true** thicknesses with the pass test
-   (2.4). Also record the change of the noise stand-in compared with the
-   design.
+   Each new thickness may be 0.5× to 1.5× its planned value. Optimizer:
+   L-BFGS-B (SciPy `minimize`), started three times (planned thicknesses,
+   0.9×, 1.1×); the best is kept.
+5. Make layers 0 to *k* **with the errors drawn in step 1**. The rescue does
+   not get perfect layers.
+6. Judge the finished mirror on its **true** thicknesses with the pass test.
+   Record the change in the noise stand-in compared with the design.
 
-*k* = 0 means no rescue: all layers are made as planned, with errors.
-*k* values tested: 0, 2, 4, 6 (and 8 in the Day 4 sweep).
+*k* = 0 means no rescue. The population runs use *k* = 4.
 
-Two details to notice:
-
-- Rescue weights (5 and 3) and noise weight (0.05) are our choices. On
-  Day 2 we tested noise weights 0, 0.05 and 0.5: pass rates did not change.
-  The 532 nm aim did matter (up to 9 points), which is why we fixed it at
-  the middle of the window (2.5%).
-- 1064 nm going *below* 5 ppm is punished in the rescue cost but not in the
-  design cost (where we used max(0, ...)). The pass test needs at least
-  4 ppm, so the rescue aims at 5 ppm from both sides.
+Notes:
+- The rescue runs on **every** mirror, even one that would already pass.
+  This matters for the measurement-error results (Section 4).
+- The weights 5, 3 and 0.05 are our choices. On Day 2, noise weights 0,
+  0.05 and 0.5 gave the same pass rates.
+- Why *k* = 4: on one design (`robust_seed9_t2.5`, 400 mirrors per point)
+  *k* = 2, 4 and 6 gave tolerable errors of 2.51%, 2.65% and 2.47%, with
+  overlapping uncertainty ranges (`results/day7/bootstrap_sturdy.txt`). So
+  2 to 6 layers work about the same, and we used 4. We did not test other
+  *k* on all 32 designs.
 
 ### 2.9 The Monte Carlo runs
 
-For each setting we simulate many mirrors and report the fraction that
-pass. Error bar: binomial standard error √(p(1 − p)/N).
+For each setting we simulate many mirrors and count how many pass.
+Uncertainty on a pass rate: √(p(1 − p)/N).
 
-**Random numbers.** Mirror number *i* at deposition error σ always gets
-the same deposition errors, from `numpy.random.default_rng([0,
-round(σ × 10⁵), i])`. Its measurement errors come from a separate
-generator, `default_rng([0, round(σ × 10⁵), round(σ_meas × 10⁵) + 1, i])`.
-So the same mirrors are used for every *k* and every measurement level,
+**Random numbers.** Mirror *i* at deposition error σ always gets the same
+errors, from `numpy.random.default_rng([0, round(σ × 10⁵), i])`. Its
+measurement errors come from a separate generator,
+`default_rng([0, round(σ × 10⁵), round(σ_meas × 10⁵) + 1, i])`. So every
+design, every *k* and every measurement level sees the very same mirrors,
 and differences come from the settings, not from luck.
 
-Command (example, the Day 5 fine scan):
+**Runs on all 33 designs** (seed 21 is run but not counted):
 
-```
-python3 scripts/run_sweep.py --design designs/robust_seed9_t2.5.npy \
-  --trials 400 --k 0 2 4 6 --dep 0.01 0.0125 0.015 0.0175 0.02 0.0225 \
-  0.025 0.0275 0.03 --meas 0 0.01 0.02 --t2 0.025 --jobs 2 \
-  --out results/day5/fine_sturdy.csv
-```
-
-All runs:
-
-| Run | Design | Errors | Mirrors per point | σ (deposition) | σ_meas | k | Output |
+| Run | Errors | σ | σ_meas | *k* | Mirrors per point | Script | Output |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| Day 4 sweep | quiet, sturdy | independent | 200 | 0.5, 1, 2, 3% | 0, 0.25, 0.5, 1, 2% | 0, 2, 4, 6, 8 | `results/day4/` |
-| Fine scan | sturdy | independent | 400 | 1-3%, steps of 0.25% | 0, 1, 2% | 0, 2, 4, 6 | `results/day5/fine_sturdy.csv` |
-| Fine scan | middle | independent | 400 | 1-3%, steps of 0.25% | 0, 1, 2% | 0, 2, 4, 6 | `results/day7/fine_seed2.csv` |
-| Fine scan | quiet | independent | 400 | 0.25-1.5%, steps of 0.25% | 0, 1, 2% | 0, 2, 4, 6 | `results/day7/fine_quiet.csv` |
-| Shared error | sturdy, quiet | shared | 200 | 1, 2, 3% | 0, 1, 2% | 0, 2, 4, 6 | `results/day6/common_*.csv` |
-| Shared error | middle | shared | 200 | 1, 2, 3% | 0, 1, 2% | 0, 2, 4, 6 | `results/day7/common_seed2.csv` |
+| A. Fine scan | independent | 0.25% to 3%, steps of 0.25% | 0, 1, 2% | 0, 4 | 200 | `scripts/population_fine.sh` | `results/population_fine/` |
+| B. Single point | independent | 2% | 0, 1, 2% | 0, 4 | 200 | `scripts/population_study.sh` | `results/population/` |
+| C. Shared error | shared | 1%, 2% | 0, 1, 2% | 0, 4 | 200 | `scripts/population_shared.sh` | `results/population_shared/` |
 
-(The Day 4 sweep was run before `--model` and the fine grids existed; its
-command used the defaults shown in `run_sweep.py` with `--trials 200` and
-`--design` set to each design file.)
+(Run A has no seed 21 file; it was already excluded.)
+
+Each run calls, per design, for example:
+
+```
+python3 scripts/run_sweep.py --design designs/population/seed1.npy \
+  --trials 200 --k 0 4 --dep 0.0025 0.005 ... 0.03 --meas 0 0.01 0.02 \
+  --t2 0.025 --jobs 2 --out results/population_fine/sweep_seed1.csv
+```
+
+(Run C adds `--model common`.)
 
 ### 2.10 The main number: tolerable error
 
-For each curve (pass rate against σ), the **tolerable error** is the σ
-where the pass rate drops to 95%. We find the first σ step where the pass
-rate is below 95% and draw a straight line between it and the step before
-(linear interpolation). If the pass rate is already below 95% at the
-smallest σ tested, we write "below" that value.
+For each design and each curve (pass rate against σ), the **tolerable
+error** is the σ where the pass rate drops to 95%. We take the first σ step
+where the pass rate is below 95% and draw a straight line to the step before.
+If the pass rate is already below 95% at 0.25%, we write "below" and count it
+as 0. If it never drops below 95% up to 3%, we would count it as 3% (this
+never happened).
 
-**Uncertainty (bootstrap).** We redraw every pass count from a binomial
-distribution with the measured pass rate, 2000 times (random seed 0), and
-recompute the tolerable error each time. The middle 95% of these values is
-the reported range. Each curve is redrawn on its own. The real curves share
-their mirrors, so the uncertainty on a *difference* between curves is, if
-anything, too large. Code: `scripts/day7_bootstrap.py <csv>`.
+**Uncertainty for one design (bootstrap).** Each pass count is redrawn from a
+binomial distribution 2000 times (random seed 0) and the tolerable error is
+recomputed. The middle 95% is the range. "Clearly higher" means the two
+ranges do not overlap. The curves share their mirrors, so this is a strict
+test.
 
-### 2.11 Extra checks
+**Across designs.** We report the median and the middle half (25th to 75th
+percentile) of the 32 values, count how many designs go up or down, and use
+Spearman rank correlation for "do sturdier designs behave differently?".
 
-1. **Hand cases (Day 2).** `scripts/day2_hand_case.py`. One layer 5% too
-   thick; a random 2% failing mirror; the same with 1% measurement error.
-   The rescue brought each back into spec. (Run on the Day 1 design, which
-   aimed at 3.2%.)
-2. **Fast vs slow optimizer.** Same mirrors rescued once with L-BFGS-B and
-   once with differential evolution (SciPy, max 300 generations,
-   population 15, tol 10⁻¹⁰, polish on, seed 0). *k* = 4, 100 mirrors per
-   row, both quiet and sturdy designs, both error models, σ = 2% and 3%,
-   σ_meas = 0 and 1%: 1600 mirrors. Code: `scripts/day6_de_check.py`.
-3. **Full noise vs stand-in.** 40 mirrors per case, σ = 2% independent,
-   *k* = 0 and 4, σ_meas = 0 and 1%, quiet and sturdy. Full Hong et al.
-   noise of each finished mirror compared with the design.
-   Code: `scripts/day6_full_noise.py`.
-4. **Size of the real Advanced LIGO problem.** No randomness, no rescue:
-   multiply the thicknesses by (1 + e) for e from −10% to +10% in steps of
-   0.25%, applied to all layers, to tantala only, or to silica only. Find
-   the smallest e that makes T(532) 10× the design value, and check
-   T(1064) there. Code: `scripts/day6_aligo_size.py`.
-5. **Why mirrors fail.** 200 mirrors per case. For every failed mirror,
-   record which target it missed and in which direction.
-   Code: `scripts/day7_failures.py`.
+Code: `scripts/population_tolerable.py` → `results/population_fine/summary.txt`.
+Single-point and shared runs: `scripts/population_summary.py [dir] [σ]` →
+`results/population/summary.txt`, `results/population_shared/summary_dep0.01.txt`,
+`summary_dep0.02.txt`. Quiet vs noisy groups:
+`scripts/population_quiet_vs_noisy.py` → `results/population_fine/quiet_vs_noisy.txt`.
+
+### 2.11 Extra checks (on one or two designs)
+
+These were run earlier on the Day 3 designs. They test the method, not the
+population.
+
+1. **Hand cases** (`scripts/day2_hand_case.py`): one layer 5% too thick; a
+   random 2% failing mirror; the same with 1% measurement error. The rescue
+   brought each back into spec.
+2. **Fast vs slow optimizer** (`scripts/day6_de_check.py`): the same mirrors
+   rescued with L-BFGS-B and with differential evolution (max 300
+   generations, population 15, tol 10⁻¹⁰, polish, seed 0). *k* = 4, 100
+   mirrors per row, designs `lownoise_seed5_t2.5` and `robust_seed9_t2.5`,
+   both error models, σ = 2% and 3%, σ_meas = 0 and 1%: 1600 mirrors.
+3. **Full noise vs stand-in** (`scripts/day6_full_noise.py`): 40 mirrors per
+   case, σ = 2% independent, *k* = 0 and 4, σ_meas = 0 and 1%, same two
+   designs.
+4. **Why mirrors fail** (`scripts/day7_failures.py`): 200 mirrors per case;
+   for each failed mirror, which target it missed and in which direction.
+5. **Size of the real Advanced LIGO problem** (`scripts/day6_aligo_size.py`):
+   no randomness; all thicknesses (or only tantala, or only silica) scaled by
+   (1 + e), e from −10% to +10% in 0.25% steps; find the smallest e that makes
+   T(532) ten times the design value.
+6. **Repeat of one fine scan with more mirrors**: `robust_seed9_t2.5` was
+   also scanned with 400 mirrors per point (σ = 1-3%,
+   `results/day5/fine_sturdy.csv`).
 
 ### 2.12 Figures
 
-`python3 scripts/make_figures.py` makes all four figures from the saved
-results (no new simulation). Output: `paper/figures/`.
+`python3 scripts/make_population_figures.py` makes Figures 1-4 from saved
+results only. Output: `paper/figures/`. Every plotted number is also written
+to `paper/figures/figure_values.txt`.
 
 ---
 
 ## 3. Results
 
-### 3.1 Sturdy design: the rescue works (Figure 1)
+### 3.1 The typical design (Figure 1)
 
-![Figure 1](../paper/figures/fig1_main_result.png)
+![Figure 1](../paper/figures/fig1_typical_design.png)
 
-Without rescue, the sturdy design keeps 95% of mirrors passing up to an
-error of **1.69%** (95% range 1.62-1.83%). With the top 4 layers re-made,
-this rises to **2.65%** (2.48-2.81%). The two ranges do not overlap, so the
-gain is real and not luck. That is about 1.5 times more error allowed.
+*Figure 1. Median pass rate of the 32 designs at each error size. Shaded
+bands: middle half of the designs (no rescue, and rescue with perfect
+measurement). Independent errors, 200 mirrors per point, top 4 layers
+re-designed.*
 
-At 3% error, the pass rate goes from 60.5% (no rescue) to 91% (rescue).
+Without rescue, the typical design passes 99% of mirrors at 1% error, 76% at
+2% and 49% at 3%. With rescue and perfect measurement: 100%, 92% and 67%.
 
-Measurement error barely hurts here: 2.61% (1% measurement error) and
-2.40% (2% measurement error).
+With 2% measurement error, the typical design passes only about 93% of
+mirrors **even at 0.25% error**, where almost every mirror would pass without
+rescue. The rescue is breaking good mirrors.
 
-How many layers to re-make: 2, 4 and 6 layers give 2.51%, 2.65% and 2.47%.
-Their ranges overlap, so we **cannot** say which is best. Re-making more
-layers is not always better, because each re-made layer is made with its
-own new error.
+Source: `paper/figures/figure_values.txt`.
 
-Source: `results/day5/fine_sturdy.csv`, `results/day7/bootstrap_sturdy.txt`.
+### 3.2 Question 1: how much bigger can the errors be? (Figure 2, left)
 
-### 3.2 Three designs: measurement accuracy decides (Figure 2)
+![Figure 2](../paper/figures/fig2_every_design.png)
 
-![Figure 2](../paper/figures/fig2_three_designs.png)
+*Figure 2. Each dot is one design. x: largest error with 95% pass, no rescue.
+y: the same with rescue. Above the dashed line the rescue helped. ▼: below
+95% already at 0.25% error.*
 
-Tolerable error (95% pass), rescue of top 4 layers:
+| | Median tolerable error | Middle half of designs |
+| --- | --- | --- |
+| No rescue | 1.14% | 0.96-1.48% |
+| Rescue, perfect measurement | 1.71% | 1.52-2.19% |
 
-| Design | No rescue | Rescue, perfect measurement | 1% measurement error | 2% measurement error |
-| --- | --- | --- | --- | --- |
-| Quiet | 0.85% | 0.83% | below 0.25% | below 0.25% |
-| Middle | 1.21% | 1.76% | 1.45% | below 1% |
-| Sturdy | 1.69% | 2.65% | 2.61% | 2.40% |
+- The rescue raised the tolerable error in **30 of 32** designs; in 27 the
+  uncertainty ranges do not overlap.
+- Typical gain: 1.43 times (range across designs 0.68 to 2.04).
+- Two designs got worse: `seed1` (0.96% → 0.66%, clearly) and
+  `lownoise_seed5_t2.5` (0.90% → 0.86%, ranges overlap).
+- Sturdier designs did not gain much more than fragile ones (Spearman
+  ρ = +0.30, p = 0.09: weak, not clear).
 
-- **Sturdy:** big gain, survives 2% measurement error.
-- **Middle:** the same ~1.5× gain with perfect measurement. At 1%
-  measurement error it keeps about half of the gain. At 2% it is worse than
-  no rescue (at 1% deposition error: 99% pass without rescue, 88% with).
-- **Quiet:** no gain even with perfect measurement. With 1% measurement
-  error, the rescue makes it worse at every error size we tried.
+The same picture at one error size (2%, run B): typical pass rate 76% → 92%;
+the rescue raised it for all 32 designs (27 by more than 2 standard
+errors). Without rescue 1 design reached 95%; with rescue 13 did.
 
-The pattern: **the sturdier the design, the more measurement error the
-rescue can live with.** Note that the middle and sturdy designs have almost
-the same thermal noise (6.70 and 6.68 × 10⁻²¹), so being sturdy is not just
-a matter of being noisier.
+Repeat check: `robust_seed9_t2.5` gave 1.79% → 2.54% here (200 mirrors) and
+1.69% → 2.65% in the separate 400-mirror scan. The ranges overlap. This
+design is the 3rd sturdiest of the 32, so its gain is near the top, not
+typical.
 
-Why measurement error can make things worse: the rescue "corrects" errors
-that are not really there. A fragile design reacts strongly to every small
-change, so these false corrections push it out of spec.
+Source: `results/population_fine/summary.txt`, `results/population/summary.txt`.
 
-Source: `results/day7/fine_*.csv`, `paper/figures/fig2_values.txt`.
+### 3.3 Question 2: how much does measurement matter? (Figure 2, middle and right)
 
-### 3.3 Shared errors: the rescue helps only a little (Figure 3)
+| Measurement error | Median tolerable error | Rescue helped | Rescue hurt |
+| --- | --- | --- | --- |
+| 0% | 1.71% | 30 of 32 (27 clearly) | 2 (1 clearly) |
+| 1% | 1.58% | 25 of 32 (14 clearly) | 7 (3 clearly) |
+| 2% | below 0.25% | 7 of 32 (1 clearly) | 25 (18 clearly) |
+
+(No rescue: 1.14%.)
+
+- At **1%** measurement error the rescue still helps most designs, but less
+  surely.
+- At **2%** it hurts most designs. For 18 of 32, fewer than 95% of mirrors
+  pass even at 0.25% error.
+- **Sturdier designs lose less** when measurement gets worse. Tolerable
+  error without rescue vs loss from 0% to 2% measurement error: ρ = −0.52,
+  p = 0.002. In run B (2% error, pass rates) the same link is stronger:
+  ρ = −0.87, p < 0.001. At 2% measurement error, every design that still
+  gained was among the sturdier half.
+
+Source: `results/population_fine/summary.txt`, `results/population/summary.txt`.
+
+### 3.4 Can the rescue make quiet designs as good as noisy ones?
+
+Quieter designs are more fragile. Noise stand-in vs tolerable error without
+rescue: ρ = +0.68, p = 2 × 10⁻⁵. We compared the 10 quietest and the 10
+noisiest designs:
+
+| Group | Noise at 100 Hz (median) | No rescue | Rescue, 0% | Rescue, 1% | Rescue, 2% |
+| --- | --- | --- | --- | --- | --- |
+| 10 quietest | 6.19 × 10⁻²¹ | 0.92% | 1.52% | 0.90% | below |
+| 10 noisiest | 6.68 × 10⁻²¹ | 1.40% | 2.21% | 1.98% | 1.33% |
+
+(Median tolerable error of each group.)
+
+With perfect measurement, rescued quiet designs (1.52%) tolerate about as
+much as noisy designs without rescue (1.40%), with 7% less noise. With 1%
+measurement error that gain is gone: 0.90%, no better than no rescue. So
+the rescue can make quiet designs as sturdy as noisy ones only if
+measurement is close to perfect. With realistic measurement it probably
+can't.
+
+Source: `results/population_fine/quiet_vs_noisy.txt`.
+
+### 3.5 Shared errors: the rescue helps a little (Figure 3)
 
 ![Figure 3](../paper/figures/fig3_shared_error.png)
 
-When all layers are off by the same amount, mirrors fail much more often.
-At 1% error, the sturdy design passes 100% of the time with independent
-errors, but only 73% with a shared error.
+*Figure 3. Pass rate of each design without and with rescue (perfect
+measurement). Grey lines join the same design; black line: median.*
 
-Pass rates with a shared error (perfect measurement):
+| | Independent, 2% | Shared, 1% | Shared, 2% |
+| --- | --- | --- | --- |
+| Median pass, no rescue | 76% | 66% | 40% |
+| Median pass, rescue (meas 0 / 1 / 2%) | 92 / 89 / 78% | 76 / 74 / 69% | 48 / 46 / 42% |
+| Rescue raised pass rate (perfect meas.) | 32 of 32 | 31 of 32 | 29 of 32 |
+| Best design after rescue | 99.5% | 91.5% | 56% |
+| Designs reaching 95% after rescue | 13 of 32 | **0 of 32** | **0 of 32** |
 
-| Design | σ | No rescue | k = 2 | k = 4 | k = 6 |
-| --- | --- | --- | --- | --- | --- |
-| Sturdy | 1% | 73% | 88% | 92% | 92% |
-| Sturdy | 2% | 42% | 52% | 56% | 57% |
-| Sturdy | 3% | 31% | 39% | 42% | 45% |
-| Middle | 1% | 68% | 72% | 74% | 76% |
-| Middle | 2% | 38% | 42% | 47% | 48% |
-| Quiet | 1% | 61% | 62% | 58% | 67% |
-| Quiet | 2% | 39% | 43% | 33% | 46% |
+A shared error is much harder: at 1% shared error the typical design already
+fails a third of its mirrors. The rescue adds about 10 points, but no design
+reaches 95%, even at 1%.
 
-The rescue never reaches 95%, even at 1%. Measurement error makes little
-difference here. Why independent errors are easier: with 40 layers, random
-ups and downs partly cancel. A shared error does not cancel: it shifts the
-whole mirror's behaviour, and changing 4 layers cannot undo a change in all
-40.
+Why: with independent errors, the ups and downs of 40 layers partly cancel.
+A shared error does not cancel; it shifts the whole mirror, and 4 layers
+cannot undo a change in all 40.
 
-Source: `results/day6/common_*.csv`, `results/day7/common_seed2.csv`.
+Source: `results/population_shared/summary_dep0.01.txt`, `summary_dep0.02.txt`.
 
-### 3.4 Why mirrors fail (Figure 4)
+### 3.6 Why mirrors fail (Figure 4, one design)
 
 ![Figure 4](../paper/figures/fig4_failures.png)
 
-Without rescue, almost all failures are "too much green light" (532 nm
-above 4%). The rescue fixes most of those. What is left mostly fails at
-1064 nm (above 6 ppm). Example: sturdy design, 3% independent errors, 200
-mirrors: without rescue 40 fail at 532 nm only, 17 at 1064 nm only, 18 at
-both; with rescue 5 at 532 nm only, 16 at 1064 nm only.
+*Figure 4. Design `robust_seed9_t2.5`, 200 mirrors per bar, rescue with
+perfect measurement. Failures sorted by which target was missed.*
 
-So the narrow 1064 nm window (4-6 ppm) is what limits the rescue: with big
-errors, the top layers cannot pull both colours back at once. With shared
-errors, the biggest group is "both too high", which the rescue cannot fix.
-For the quiet design, the rescue turns 532 nm failures into 1064 nm
-failures one for one, so there is no net gain. Failures are almost always
-"too much light", almost never "too little".
+This is a worked example on one design, not a population result.
+
+- Without rescue, most failures are "too much green light" (532 nm above 4%).
+- The rescue removes most of these. What is left mostly fails at 1064 nm
+  (above 6 ppm). Example, 3% independent error: without rescue 40 fail at
+  532 nm only, 17 at 1064 nm only, 18 at both; with rescue 5 and 16 and 0.
+- With a shared error the biggest group is "both too high", which the rescue
+  cannot fix.
+- Failures are almost always "too much light", almost never "too little".
+
+So the narrow 1064 nm window (4-6 ppm) is what limits the rescue.
 
 Source: `results/day7/failures.txt`.
 
-### 3.5 The fast optimizer is good enough
+### 3.7 Noise cost (question 3)
 
-Out of 1600 mirrors, the slow optimizer (differential evolution) passed 22
-that the fast one failed, and the fast one passed 5 that the slow one
-failed.
+Across all 32 designs (run A), the rescue changed the noise stand-in by a
+median of −0.02% (range −0.43% to +0.19%, averaged over all error sizes).
 
-- Sturdy design: 4 disagreements in 800 mirrors, 2 each way.
-- Quiet design, shared error: the slow optimizer rescued up to 8 more
-  mirrors in 100. So for that one case our numbers are a little too
-  pessimistic. The quiet design still stays far below 95%.
+Full-formula check on two designs (Section 2.11, check 3): average change
+−0.13% to −0.20%; single mirrors −0.85% to +0.55%. The stand-in gave the
+same sign and size (−0.23% to −0.34%).
 
-Source: `results/day6/de_check.txt`.
+So the rescue does not make the mirror noisier.
 
-### 3.6 The rescue costs no noise
+Source: `results/population_fine/summary.txt`, `results/day6/full_noise.txt`.
 
-With the full noise formula, the rescue changed the thermal noise by
-−0.13% to −0.20% on average (single mirrors: −0.85% to +0.55%). The quick
-stand-in gave −0.23% to −0.34%: the same sign and size. So the rescue does
-not make the mirror noisier.
+### 3.8 Checks on the method
 
-Source: `results/day6/full_noise.txt`.
-
-### 3.7 Matching the real Advanced LIGO problem
-
-Smallest systematic error that makes T(532) 10× the design value:
-
-| Error on | Sturdy | Quiet |
-| --- | --- | --- |
-| all layers | −2.25% (T1064 7.98 ppm, out) | −1.00% (T1064 6.24 ppm, just out) |
-| tantala only | −3.50% (6.75 ppm, out) | −2.25% (6.55 ppm, out) |
-| silica only | +6.00% (5.21 ppm, in spec) | −1.50% (5.85 ppm, in spec) |
-
-A systematic error of only 1-3% is enough for a 10× jump at 532 nm, which
-is a realistic size. But in our model 1064 nm usually goes out of spec too,
-while in the real mirrors it stayed in spec. Ours stays in spec mainly
-when only one material is off. Their real design was different from ours,
-and the paper does not say how big the error was. So we can only say our
-model behaves in the same way, not that it reproduces their mirrors.
-
-Source: `results/day6/aligo_size.txt`.
+- **Fast vs slow optimizer.** Of 1600 mirrors, the slow optimizer passed 22
+  that the fast one failed, and the fast one passed 5 that the slow one
+  failed. On `robust_seed9_t2.5`: 4 disagreements in 800. On
+  `lownoise_seed5_t2.5` with shared error the slow one rescued up to 8 more
+  in 100. So our numbers may be slightly pessimistic for fragile designs
+  under shared error; this does not change any conclusion
+  (`results/day6/de_check.txt`).
+- **The real Advanced LIGO problem.** Scaling all layers by −2.25%
+  (`robust_seed9_t2.5`) or −1.00% (`lownoise_seed5_t2.5`) raises T(532)
+  ten times. So a 1-3% systematic error is enough to cause the kind of
+  problem seen in Advanced LIGO. But in our model 1064 nm then usually
+  leaves its window too, while in the real mirrors it stayed in spec; ours
+  stays in spec mainly when only one material is off (silica only: +6.00%
+  and −1.50%, T(1064) 5.21 and 5.85 ppm). The real design was different and
+  the size of its error is not published, so we can only say our model
+  behaves in the same way (`results/day6/aligo_size.txt`).
 
 ---
 
 ## 4. Discussion
 
-**Answer to question 1 (how much bigger can errors be?).** For a sturdy
-design, about 1.5 times bigger: 1.7% → 2.6%, if errors are independent.
-For a shared error, the rescue helps only a little, and cannot reach 95%
-at 1%.
+**The main question: can the rescue let the mirror tolerate larger errors?**
+Yes, under two conditions: the errors are independent from layer to layer,
+and the layers are measured to about 1% or better. Then the typical design
+goes from 1.14% to 1.71% (perfect measurement) or 1.58% (1%). It probably
+can't when measurement is off by 2%, and it can't bring shared errors to
+95% for any of our 32 designs.
 
-**Answer to question 2 (how much does measurement matter?).** It depends on
-the design. The sturdier the design, the more measurement error the rescue
-can handle. Sturdy: 2% is fine. Middle: about 1% is the limit. Quiet: even
-1% hurts. So a coating maker should only use this kind of rescue with a
-sturdy design and good monitoring.
+**Question 1.** About 1.4 times bigger errors for the typical design, and the
+gain shows up in 30 of 32 designs. It is not one lucky design.
 
-**Answer to question 3 (noise cost?).** None we can measure (about −0.2%).
+**Question 2.** Measurement is the deciding factor. The rescue trusts the
+measurement completely: it changes the top layers to cancel what it sees. If
+what it sees is mostly measurement noise, it adds error instead of removing
+it. At 2% measurement error, this happens even to mirrors that had almost no
+deposition error (Figure 1). A coating maker who wants to use the rescue
+should first check that their measurement is good to about 1%. Sturdier
+designs put up with bad measurement better, so the design choice matters too.
 
-**Compared with what we expected.** Both expected outcomes came true, for
-different designs: outcome 1 for the sturdy design, outcome 2 for the
-middle and quiet ones. The Day 3 hope (rescue makes the quiet design as
-reliable as the sturdy one) did not come true.
+**What the 2% result does and does not say.** Our rescue runs on every
+mirror. A more careful rule, for example "only re-design if the measured
+mirror would fail", might avoid breaking good mirrors. We did not test this,
+so our 2% result is about rescuing every mirror, not about every possible
+rescue.
 
-**What this means in practice.** The rescue is a cheap add-on: it needs
-only a re-calculation before the last few layers, not a new machine. It
-lets a sturdy design be made with looser thickness control. It does not
-replace a sturdy design, and it does not fix a machine that is always off
-in the same direction. For that, the machine must be calibrated. A smarter
-rescue could estimate a shared error from the measured layers and correct
-for it ahead of time; we did not test this.
+**Question 3.** No noise cost. The rescue moves a few nanometres in 4 layers
+out of 40.
+
+**Quiet vs sturdy.** The Day 3 hope was that the rescue could let a quiet,
+fragile design match a sturdy one. With perfect measurement it roughly does
+(Section 3.4). With 1% measurement error it does not. So in practice the
+choice between "quieter" and "sturdier" design is not removed by the rescue.
+
+**Compared with what we expected.** Both expected outcomes happened, at
+different measurement levels: a clear gain at 0-1%, and a gain that
+disappears (and turns into a loss) at 2%.
+
+**What this means in practice.** The rescue is cheap: one extra calculation
+before the last few layers, no new machine. It is useful against random
+layer-to-layer errors, if measurement is good. It is not a fix for a machine
+that is off in the same direction every time; that needs calibration. A
+smarter rescue might estimate a shared error from the measured layers and
+correct for it; we did not test this.
 
 **The Advanced LIGO connection.** The real end mirrors had a systematic
-thickness error that broke the 532 nm target, which is our shared-error
-case. Our results suggest that a top-layer rescue of this kind would only
-partly help with such an error.
+thickness error, which is our shared-error case. Our results suggest a
+top-layer rescue like ours would only partly help with such an error.
 
 ---
 
 ## 5. Limitations
 
 - Simulation only. No coating was made or measured.
-- Only thickness errors. Real coatings also have errors in refractive
-  index, absorption and uneven layers.
-- Measurement error levels are assumed (swept from 0 to 2%), not taken
-  from a real machine.
-- Errors are either fully independent or fully shared. Real machines
-  probably have a mix.
-- One kind of mirror (Advanced LIGO-style end mirror). Future detectors
-  use other materials and targets.
-- The designs came partly from luck: our design cost had no term asking
-  for robustness (the Caltech code has one).
-- Three designs only.
-- The rescue happens once, before the last *k* layers. Correcting after
-  every layer might do better.
-- The rescue cost weights (5, 3, 0.05) are our choices; we checked that
-  the noise weight does not matter, but not every combination.
+- Only thickness errors. Real coatings also have index errors, absorption
+  and uneven layers.
+- Measurement error is assumed (0, 1, 2%), not taken from a real machine.
+- Errors are either fully independent or fully shared. Real machines have a
+  mix.
+- The rescue runs on every mirror, once, before the last 4 layers. Other
+  rules (rescue only when needed, rescue after every layer, other *k*) were
+  not tested on the population.
+- One kind of mirror, two materials. Future detectors use other materials
+  and targets.
+- 32 designs, all from one optimizer with one cost. A different design
+  method could give designs that behave differently.
+- 200 mirrors per point. A single tolerable error has an uncertainty of
+  about ±0.1-0.3% (Section 2.10); the medians over 32 designs are steadier.
+- The rescue weights (5, 3, 0.05) are our choices.
 - The same refractive index is used at 532 nm and 1064 nm.
-- Our literature search was not complete. Coating labs may already do this
-  privately.
+- The code that made the 3 Day 3 designs was not saved (Appendix A).
+- Our literature search was not complete.
 
 ---
 
 ## 6. Conclusion
 
-Re-designing the last few layers of a LIGO-style end mirror, after
-measuring the layers already made, lets a sturdy design tolerate about 1.5
-times bigger random thickness errors at no noise cost, as long as the
-layers can be measured to about 1-2%. It does not help fragile designs, and
-it helps only a little against an error shared by all layers, which is the
-kind of error the real Advanced LIGO end mirrors had.
+Re-designing the top 4 layers of an Advanced LIGO-style end mirror, after
+measuring the layers already made, can let the mirror tolerate about 1.4
+times bigger random thickness errors (typical design: 1.14% → 1.71%), at no
+noise cost. We saw this in 30 of 32 designs. It needs good measurement: at
+1% measurement error most of the gain remains, but at 2% the rescue (applied
+to every mirror) does more harm than good. It cannot bring a shared,
+same-direction error, the kind the real Advanced LIGO end mirrors had, up to
+a 95% pass rate.
 
 ---
 
-## Appendix A: Can the designs be re-made?
+## Appendix A: The three Day 3 designs
 
-**The three designs are the original Day 3 outputs.** Scratch copies saved
-at the same minute as the locked files (00:43, 14 Nov) are identical to
-them, to the last digit. Git also holds them from the Day 3 commit onward.
-So every result in this paper comes from the original designs.
+The three Day 3 designs are the original Day 3 outputs: scratch copies saved
+at the same minute as the locked files are identical to them, and git holds
+them from the Day 3 commit onward.
 
-**What is missing is the code that made them.** The Day 3 seed search was
-run interactively and its code was not saved as a script. Searching the
-session record did not recover it.
+What is missing is the code that made them. It was run interactively and not
+saved. `scripts/make_designs.py` follows the same method as closely as we
+could write it down, but re-running it with seeds 5, 2 and 9 gives different
+designs (layers differ by up to 30-80%; `results/day7/remake_robustness.txt`).
 
-**What we tried.** `scripts/make_designs.py` follows the method in 2.5 as
-closely as we could write it down. Re-running it gives designs of the same
-two kinds (seed 5 is quiet and fragile; seeds 2 and 9 are noisier and
-sturdier), but the layers differ by up to 30-80%. So the settings we
-wrote down (population size, generations, starting points) are not the
-ones used on Day 3. We do not know which setting differs.
-
-| Seed | Original: T1064, T532, proxy | Re-made: T1064, T532, proxy | Pass at 2% error, no rescue (original → re-made) |
-| --- | --- | --- | --- |
-| 5 (quiet) | 5.31 ppm, 2.47%, 0.915 | 5.07 ppm, 2.39%, 0.915 | 67% → 75% |
-| 2 (middle) | 5.12 ppm, 2.45%, 1.046 | 5.07 ppm, 2.53%, 1.040 | 80% → 89% |
-| 9 (sturdy) | 5.05 ppm, 2.50%, 1.040 | 5.10 ppm, 2.47%, 1.033 | 95% → 89% |
-
-(500 mirrors, same random mirrors for every design; `results/day7/remake_robustness.txt`.)
-
-**What this means.** The results are fully reproducible from the design
-files, which are in the repository. The design *generator* is not
-reproducible exactly, and the paper must say so. Anyone can repeat the
-whole study from the saved designs.
+This is why we built the 32-design set. No conclusion in this paper rests on
+the three Day 3 designs alone. Every result in Sections 3.1-3.5 and 3.7 is
+over all 32. Anyone can re-make the 30 script designs from their seeds and
+repeat the whole study.
 
 ## Appendix B: Where everything is
 
@@ -672,11 +702,14 @@ whole study from the saved designs.
 | --- | --- |
 | Core model (stack, light, noise stand-in, errors, rescue, one trial) | `rescue.py` |
 | Tests | `tests/test_rescue.py` |
+| Design maker | `scripts/make_designs.py` |
+| Designs | `designs/population/` (30), `designs/` (3 Day 3) |
 | Monte Carlo sweeps | `scripts/run_sweep.py` |
-| Designs | `designs/` |
-| Day-by-day notes with all tables | `notes/` |
-| Results (CSV and text) | `results/day4` to `results/day7` |
-| Figures | `paper/figures/`, made by `scripts/make_figures.py` |
+| Population runs | `scripts/population_fine.sh`, `population_study.sh`, `population_shared.sh` |
+| Population analysis | `scripts/population_tolerable.py`, `population_summary.py`, `population_quiet_vs_noisy.py` |
+| Results | `results/population_fine/`, `results/population/`, `results/population_shared/`, checks in `results/day5` to `day7` |
+| Figures | `paper/figures/`, made by `scripts/make_population_figures.py` |
+| Day-by-day notes | `notes/` |
 | References | `paper/references.bib` |
 
 ## References
