@@ -175,7 +175,7 @@ all pass).
   Code: `rescue.py`, `build_stack()`.
 - Substrate temperature setting: 295 K.
 
-Material values (from OptimalBragg, which cites arXiv:0912.0107):
+Material values (from OptimalBragg, which cites Franc et al. 2009, arXiv:0912.0107):
 
 | | SiO2 | Ti:Ta2O5 |
 | --- | --- | --- |
@@ -763,4 +763,7 @@ a 95% pass rate.
 - Tikhonravov and Trubetskov, Appl. Opt. 51(30), 7319 (2012).
 - Wilbrandt, Stenzel, Kaiser, Proc. SPIE 7101 (2008).
 - Melzig et al., Surf. Coat. Technol. 476, 130197 (2024).
-- Material values: arXiv:0912.0107 (title and authors still to confirm).
+- Franc, Morgado, Flaminio, Nawrodt, Martin, Cunningham, Cumming, Rowan,
+  Hough, "Mirror thermal noise in laser interferometer gravitational wave
+  detectors operating at room and cryogenic temperature", arXiv:0912.0107
+  (2009). Source of the material values.
