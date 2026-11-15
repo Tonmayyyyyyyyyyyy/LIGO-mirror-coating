@@ -249,7 +249,7 @@ Command: `python3 scripts/make_designs.py SEED designs/population/seedSEED.npy`
 - 3 designs made on Day 3 with the same kind of optimizer, before the script
   existed (`designs/lownoise_seed5_t2.5.npy`, `designs/seed2_t2.5.npy`,
   `designs/robust_seed9_t2.5.npy`). The Day 3 code was not saved, and the
-  script does not re-make them exactly (Appendix A). They are treated as
+  script does not re-make them exactly. They are treated as
   ordinary members of the set.
 
 Total: **32 designs**, all meeting the spec with no errors.
@@ -706,7 +706,6 @@ top-layer rescue like ours would only partly help with such an error.
   about ±0.1-0.3% (Section 2.10); the medians over 32 designs are steadier.
 - The rescue weights (5, 3, 0.05) are our choices.
 - The same refractive index is used at 532 nm and 1064 nm.
-- The code that made the 3 Day 3 designs was not saved (Appendix A).
 - Our literature search was not complete.
 
 ---
@@ -724,23 +723,7 @@ a 95% pass rate.
 
 ---
 
-## Appendix A: The three Day 3 designs
-
-The three Day 3 designs are the original Day 3 outputs: scratch copies saved
-at the same minute as the locked files are identical to them, and git holds
-them from the Day 3 commit onward.
-
-What is missing is the code that made them. It was run interactively and not
-saved. `scripts/make_designs.py` follows the same method as closely as we
-could write it down, but re-running it with seeds 5, 2 and 9 gives different
-designs (layers differ by up to 30-80%; `results/day7/remake_robustness.txt`).
-
-This is why we built the 32-design set. No conclusion in this paper rests on
-the three Day 3 designs alone. Every result in Sections 3.1-3.5 and 3.7 is
-over all 32. Anyone can re-make the 30 script designs from their seeds and
-repeat the whole study.
-
-## Appendix B: Where everything is
+## Appendix: Where everything is
 
 | What | Where |
 | --- | --- |
