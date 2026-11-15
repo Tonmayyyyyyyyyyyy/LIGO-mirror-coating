@@ -369,12 +369,32 @@ never happened).
 **Uncertainty for one design (bootstrap).** Each pass count is redrawn from a
 binomial distribution 2000 times (random seed 0) and the tolerable error is
 recomputed. The middle 95% is the range. "Clearly higher" means the two
-ranges do not overlap. The curves share their mirrors, so this is a strict
-test.
+ranges do not overlap. The bootstrap treats the two curves as if they had
+different mirrors. They share their mirrors, which makes the real
+difference *less* uncertain than this, so "clearly" is on the safe side.
 
 **Across designs.** We report the median and the middle half (25th to 75th
-percentile) of the 32 values, count how many designs go up or down, and use
-Spearman rank correlation for "do sturdier designs behave differently?".
+percentile) of the 32 values, and count how many designs go up or down.
+
+**Statistical tests.** Code: `scripts/stats_checks.py` →
+`results/stats/stats_checks.txt`.
+
+- *Sign test.* If the rescue did nothing, each design would be equally
+  likely to go up or down. The sign test (exact binomial, p = ½, ties left
+  out) gives the chance of seeing a count like ours by luck.
+- *Paired test per design (exact McNemar).* For one error size we re-ran
+  every mirror and saved pass/fail for each one (`scripts/paired_outcomes.py`,
+  independent 2% and shared 1%; the re-run gave exactly the saved pass
+  rates). For each design we count mirrors **saved** by the rescue (fail →
+  pass) and mirrors **broken** by it (pass → fail), and test whether saved
+  and broken differ (two-sided binomial on the two counts). This uses the
+  fact that both arms see the same mirrors. Because we test 32 designs, we
+  also give the count after Holm correction.
+- *Rank correlation (Spearman).* For "do sturdier designs behave
+  differently?". We report 16 correlations in total, so every p-value is
+  also given after Holm correction over all 16. Holm correction makes each
+  p-value stricter so that, across many tests, the chance of even one false
+  "significant" stays at 5%.
 
 Code: `scripts/population_tolerable.py` → `results/population_fine/summary.txt`.
 Single-point and shared runs: `scripts/population_summary.py [dir] [σ]` →
@@ -454,12 +474,17 @@ y: the same with rescue. Above the dashed line the rescue helped. ▼: below
 - Typical gain: 1.43 times (range across designs 0.68 to 2.04).
 - Two designs got worse: `seed1` (0.96% → 0.66%, clearly) and
   `lownoise_seed5_t2.5` (0.90% → 0.86%, ranges overlap).
-- Sturdier designs did not gain much more than fragile ones (Spearman
-  ρ = +0.30, p = 0.09: weak, not clear).
+- Sign test: 30 up, 2 down, p = 2 × 10⁻⁷. This is not luck.
+- Sturdier designs did not clearly gain more than fragile ones (Spearman
+  ρ = +0.30, p = 0.09; after Holm correction p = 0.6: no evidence).
 
 The same picture at one error size (2%, run B): typical pass rate 76% → 92%;
-the rescue raised it for all 32 designs (27 by more than 2 standard
-errors). Without rescue 1 design reached 95%; with rescue 13 did.
+the rescue raised it for all 32 designs (sign test p = 5 × 10⁻¹⁰). Without
+rescue 1 design reached 95%; with rescue 13 did.
+
+Mirror by mirror (paired test, same point): over all 32 designs the rescue
+saved 848 mirrors and broke 38. It was significantly better for 30 designs
+(28 after Holm correction) and significantly worse for none.
 
 Repeat check: `robust_seed9_t2.5` gave 1.79% → 2.54% here (200 mirrors) and
 1.69% → 2.65% in the separate 400-mirror scan. The ranges overlap. This
@@ -470,30 +495,40 @@ Source: `results/population_fine/summary.txt`, `results/population/summary.txt`.
 
 ### 3.3 Question 2: how much does measurement matter? (Figure 2, middle and right)
 
-| Measurement error | Median tolerable error | Rescue helped | Rescue hurt |
-| --- | --- | --- | --- |
-| 0% | 1.71% | 30 of 32 (27 clearly) | 2 (1 clearly) |
-| 1% | 1.58% | 25 of 32 (14 clearly) | 7 (3 clearly) |
-| 2% | below 0.25% | 7 of 32 (1 clearly) | 25 (18 clearly) |
+| Measurement error | Median tolerable error | Rescue helped | Rescue hurt | Sign test |
+| --- | --- | --- | --- | --- |
+| 0% | 1.71% | 30 of 32 (27 clearly) | 2 (1 clearly) | p = 2 × 10⁻⁷ |
+| 1% | 1.58% | 25 of 32 (14 clearly) | 7 (3 clearly) | p = 0.002 |
+| 2% | below 0.25% | 7 of 32 (1 clearly) | 25 (18 clearly) | p = 0.002 (hurt) |
 
 (No rescue: 1.14%.)
+
+Mirror by mirror at 2% deposition error (paired test):
+
+| Measurement error | Mirrors saved | Mirrors broken | Designs significantly better / worse (after Holm) |
+| --- | --- | --- | --- |
+| 0% | 848 | 38 | 28 / 0 |
+| 1% | 759 | 190 | 25 / 1 |
+| 2% | 547 | 609 | 1 / 2 |
 
 - At **1%** measurement error the rescue still helps most designs, but less
   surely.
 - At **2%** it hurts most designs. For 18 of 32, fewer than 95% of mirrors
-  pass even at 0.25% error.
+  pass even at 0.25% error. At 2% deposition error it breaks more mirrors
+  than it saves (609 vs 547).
 - **Sturdier designs lose less** when measurement gets worse. Tolerable
   error without rescue vs loss from 0% to 2% measurement error: ρ = −0.52,
-  p = 0.002. In run B (2% error, pass rates) the same link is stronger:
-  ρ = −0.87, p < 0.001. At 2% measurement error, every design that still
-  gained was among the sturdier half.
+  p = 0.002 (Holm p = 0.02). In run B (2% error, pass rates) the same link
+  is stronger: ρ = −0.87 (Holm p = 10⁻⁹). At 2% measurement error, every
+  design that still gained was among the sturdier half.
 
-Source: `results/population_fine/summary.txt`, `results/population/summary.txt`.
+Source: `results/population_fine/summary.txt`, `results/population/summary.txt`,
+`results/stats/stats_checks.txt`.
 
 ### 3.4 Can the rescue make quiet designs as good as noisy ones?
 
 Quieter designs are more fragile. Noise stand-in vs tolerable error without
-rescue: ρ = +0.68, p = 2 × 10⁻⁵. We compared the 10 quietest and the 10
+rescue: ρ = +0.67, p = 3 × 10⁻⁵ (Holm p = 0.0004). We compared the 10 quietest and the 10
 noisiest designs:
 
 | Group | Noise at 100 Hz (median) | No rescue | Rescue, 0% | Rescue, 1% | Rescue, 2% |
@@ -530,6 +565,11 @@ measurement). Grey lines join the same design; black line: median.*
 A shared error is much harder: at 1% shared error the typical design already
 fails a third of its mirrors. The rescue adds about 10 points, but no design
 reaches 95%, even at 1%.
+
+The small gain is real, not luck. Sign test at 1%: 31 up, 1 down,
+p = 2 × 10⁻⁸. Mirror by mirror at 1%: 700 saved, 29 broken; significantly
+better for 27 designs after Holm correction, worse for none. At 2% shared
+error, sturdier designs gained *less* (ρ = −0.66, Holm p = 0.0005).
 
 Why: with independent errors, the ups and downs of 40 layers partly cancel.
 A shared error does not cancel; it shifts the whole mirror, and 4 layers
@@ -658,6 +698,10 @@ top-layer rescue like ours would only partly help with such an error.
   and targets.
 - 32 designs, all from one optimizer with one cost. A different design
   method could give designs that behave differently.
+- The uncertainty range of a single tolerable error ignores that the
+  curves share mirrors (on the safe side). The fully paired test was done at
+  one error size only (2% independent, 1% shared), because it needed a
+  re-run.
 - 200 mirrors per point. A single tolerable error has an uncertainty of
   about ±0.1-0.3% (Section 2.10); the medians over 32 designs are steadier.
 - The rescue weights (5, 3, 0.05) are our choices.
@@ -707,6 +751,7 @@ repeat the whole study.
 | Monte Carlo sweeps | `scripts/run_sweep.py` |
 | Population runs | `scripts/population_fine.sh`, `population_study.sh`, `population_shared.sh` |
 | Population analysis | `scripts/population_tolerable.py`, `population_summary.py`, `population_quiet_vs_noisy.py` |
+| Statistical tests | `scripts/paired_outcomes.py`, `scripts/stats_checks.py` → `results/stats/` |
 | Results | `results/population_fine/`, `results/population/`, `results/population_shared/`, checks in `results/day5` to `day7` |
 | Figures | `paper/figures/`, made by `scripts/make_population_figures.py` |
 | Day-by-day notes | `notes/` |

@@ -1,0 +1,61 @@
+1. SIGN TESTS (ties left out; null: up and down equally likely)
+
+Tolerable error, independent errors (fine scan):
+  rescue, perfect measurement   : up 30, down  2, tie 0  p = 2e-07
+  rescue, 1% measurement error  : up 25, down  7, tie 0  p = 0.002
+  rescue, 2% measurement error  : up  7, down 25, tie 0  p = 0.002
+Pass rate, independent 2%:
+  rescue, perfect measurement   : up 32, down  0, tie 0  p = 5e-10
+  rescue, 1% measurement error  : up 28, down  4, tie 0  p = 2e-05
+  rescue, 2% measurement error  : up 15, down 13, tie 4  p = 0.9
+Pass rate, shared 1%:
+  rescue, perfect measurement   : up 31, down  1, tie 0  p = 2e-08
+  rescue, 1% measurement error  : up 30, down  2, tie 0  p = 2e-07
+  rescue, 2% measurement error  : up 21, down 10, tie 1  p = 0.07
+Pass rate, shared 2%:
+  rescue, perfect measurement   : up 29, down  3, tie 0  p = 3e-06
+  rescue, 1% measurement error  : up 28, down  4, tie 0  p = 2e-05
+  rescue, 2% measurement error  : up 24, down  8, tie 0  p = 0.007
+
+2. PAIRED TEST PER DESIGN (exact McNemar: same 200 mirrors with and without rescue)
+   b = mirrors saved by the rescue, c = mirrors broken by it; p = two-sided binomial on b vs c.
+   Holm correction over the 32 designs of each row.
+
+paired_common_0.01.csv
+  rescue, perfect measurement   : significantly better in 29 (Holm: 27), worse in  1 (Holm:  0); all designs: 700 saved, 29 broken
+  rescue, 1% measurement error  : significantly better in 26 (Holm: 22), worse in  1 (Holm:  0); all designs: 613 saved, 76 broken
+  rescue, 2% measurement error  : significantly better in 12 (Holm:  6), worse in  3 (Holm:  2); all designs: 488 saved, 312 broken
+
+paired_independent_0.02.csv
+  rescue, perfect measurement   : significantly better in 30 (Holm: 28), worse in  0 (Holm:  0); all designs: 848 saved, 38 broken
+  rescue, 1% measurement error  : significantly better in 25 (Holm: 25), worse in  1 (Holm:  1); all designs: 759 saved, 190 broken
+  rescue, 2% measurement error  : significantly better in  3 (Holm:  1), worse in  7 (Holm:  2); all designs: 547 saved, 609 broken
+
+3. SPEARMAN CORRELATIONS REPORTED IN THE PAPER, Holm-corrected over all of them
+
+  16 tests.
+  fine scan: noise proxy vs tolerable error (no rescue)          rho = +0.67  p = 3e-05  Holm p = 0.0004  significant
+  fine scan: sturdiness vs gain, perfect measurement             rho = +0.30  p = 0.09  Holm p = 0.6  not significant
+  fine scan: sturdiness vs gain, 2% measurement                  rho = +0.54  p = 0.001  Holm p = 0.01  significant
+  fine scan: sturdiness vs loss from 0 to 2% measurement         rho = -0.52  p = 0.002  Holm p = 0.02  significant
+  independent 2%: noise proxy vs pass rate (no rescue)           rho = +0.66  p = 4e-05  Holm p = 0.0005  significant
+  independent 2%: sturdiness vs gain, perfect measurement        rho = -0.16  p = 0.4  Holm p = 0.8  not significant
+  independent 2%: sturdiness vs gain, 2% measurement             rho = +0.56  p = 0.0008  Holm p = 0.008  significant
+  independent 2%: sturdiness vs loss from 0 to 2% measurement    rho = -0.87  p = 7e-11  Holm p = 1e-09  significant
+  shared 1%: noise proxy vs pass rate (no rescue)                rho = +0.50  p = 0.003  Holm p = 0.02  significant
+  shared 1%: sturdiness vs gain, perfect measurement             rho = -0.11  p = 0.5  Holm p = 0.8  not significant
+  shared 1%: sturdiness vs gain, 2% measurement                  rho = +0.29  p = 0.1  Holm p = 0.6  not significant
+  shared 1%: sturdiness vs loss from 0 to 2% measurement         rho = -0.88  p = 5e-11  Holm p = 9e-10  significant
+  shared 2%: noise proxy vs pass rate (no rescue)                rho = -0.23  p = 0.2  Holm p = 0.6  not significant
+  shared 2%: sturdiness vs gain, perfect measurement             rho = -0.66  p = 4e-05  Holm p = 0.0005  significant
+  shared 2%: sturdiness vs gain, 2% measurement                  rho = -0.57  p = 0.0007  Holm p = 0.007  significant
+  shared 2%: sturdiness vs loss from 0 to 2% measurement         rho = -0.29  p = 0.1  Holm p = 0.6  not significant
+
+4. HOW MUCH THE 'BELOW = 0' CHOICE MATTERS (fine scan)
+
+  k0:  0 'below'. Median with below = 0: 1.14%; below = 0.25%: 1.14%; below left out: 1.14% (of 32)
+  m0:  0 'below'. Median with below = 0: 1.71%; below = 0.25%: 1.71%; below left out: 1.71% (of 32)
+  m1:  3 'below'. Median with below = 0: 1.58%; below = 0.25%: 1.58%; below left out: 1.62% (of 29)
+  m2: 18 'below'. Median with below = 0: 0.00%; below = 0.25%: 0.25%; below left out: 1.53% (of 14)
+  Spearman uses ranks, so 'below' is the lowest rank whether it is entered as 0 or 0.25%.
+  Leaving 'below' out would drop the designs that did worst, which flatters the rescue.
