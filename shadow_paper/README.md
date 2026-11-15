@@ -213,7 +213,7 @@ Code: `rescue.noise_proxy(Ls)`. Section 3.7 checks that the stand-in agrees
 with the full formula.
 
 If tantala's loss angle is 3.6 × 10⁻⁴ instead (as in Venugopalan et al.),
-every noise value rises by 26-29%, but no pass rate changes, because passing
+every noise value rises by 25-29% (checked on all 32 designs), but no pass rate changes, because passing
 depends only on light.
 
 ### 2.4 The pass test
@@ -317,8 +317,10 @@ Code: `rescue.trial()`. Inputs: design, rescue size *k*, σ, σ_meas.
 Notes:
 - The rescue runs on **every** mirror, even one that would already pass.
   This matters for the measurement-error results (Section 4).
-- The weights 5, 3 and 0.05 are our choices. On Day 2, noise weights 0,
-  0.05 and 0.5 gave the same pass rates.
+- The weights 5, 3 and 0.05 are our choices. On Day 2, on an early test
+  design (2% error, 0.5% measurement error, 200 mirrors), noise weights 0,
+  0.05 and 0.5 gave pass rates within 2 points of each other, which is
+  within the noise.
 - Why *k* = 4: on one design (`robust_seed9_t2.5`, 400 mirrors per point)
   *k* = 2, 4 and 6 gave tolerable errors of 2.51%, 2.65% and 2.47%, with
   overlapping uncertainty ranges (`results/day7/bootstrap_sturdy.txt`). So
