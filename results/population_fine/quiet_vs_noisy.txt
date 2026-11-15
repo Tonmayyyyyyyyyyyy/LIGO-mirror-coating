@@ -1,0 +1,7 @@
+32 designs. Noise proxy vs tolerable error without rescue: Spearman rho = +0.68, p = 2e-05
+Full noise at 100 Hz over all 32: 6.18-6.72 e-21 m/rtHz
+
+Median tolerable error (%) of each group:
+group           noise  no rescue  meas 0%  meas 1%  meas 2%
+10 quietest      6.19       0.92     1.52     0.90     0.00
+10 noisiest      6.68       1.40     2.21     1.98     1.33
