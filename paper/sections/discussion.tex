@@ -1,0 +1,72 @@
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{The rescue improves tolerance to independent errors}
+
+The main result shows that redesigning the final few layers can make an Advanced LIGO-style mirror more tolerant to independent thickness errors. When we redesigned top 4 layers and made perfect measurements, the median tolerable error increased from 1.14\% to 1.71\%. This is about a 1.4-fold increase. This improvement appeared in 30 of the 32 designs. The 95\% interval for the ratio was 1.36--1.56.
+
+We verified this result with several checks. The result remained unchanged when we removed the three exploratory designs, when we changed the pass threshold from 95\% to 90\%, and when we repeated the simulation with a second set of mirrors. This makes it unlikely that the result came from one unusually good design or one particular set of random errors.
+
+The improvement may be explained by the way independent errors affect the coating. Each layer has its own error, so some layers can become thicker while others become thinner. These changes can partly cancel across the stack. However, the remaining errors can still move the transmission outside the required ranges. By measuring the layers already made and redesigning the final layers, the rescue can correct some of the remaining optical error.
+
+That being said, the improvement was not the same for every design. Two designs became worse (clearly for S1, slightly for E1), and the gain varied widely between designs, from a factor of 0.68 to 2.04. Therefore we cannot guarantee that every coating will become more reliable with this method. However, the improvement across most of the population suggests that the result is not limited to a single design.
+
+The measured gain also depends on how many layers are redesigned. Four layers were chosen after a preliminary test on one design, rather than a full comparison across the population. Later runs showed that redesigning six or eight layers could improve the pass rate further. At 2\% independent deposition error the median pass rate increased from 92\% with four rescued layers to 96\% with eight. This suggests that the four-layer result is not the maximum possible improvement. However, the larger numbers of rescued layers were tested at only a limited number of conditions, so a full comparison is still needed.
+
+\subsection{Measurement accuracy determines whether rescue works}
+
+The most important condition for the rescue method is measurement accuracy. In this method, we used measured layer thicknesses to decide how the remaining layers should change. If the measurements are inaccurate, the optimization may correct errors that are not actually present.
+
+Our results show a clear relationship between deposition error and measurement error. Rescue works best when the measurement error is smaller than the deposition error. For example, at 2\% deposition error, the method still helped when measurement error was up to 1.5\%. But it became roughly neutral when both errors were 2\%. At 1\% deposition error, it helped when measurement error was 0.5\% or less and was neutral at 1\%. It worsened the performance when the measurement error increased further.
+
+This makes sense because the optimization trusts the measurements. When measurement error is small, the measured thicknesses give us a useful picture of the coating that has already been made. The algorithm can then choose final layer thicknesses to compensate for the actual deposition errors. When measurement error becomes large, the algorithm may instead respond to measurement noise. It can change the final layers in the wrong direction and make a passing mirror fail.
+
+Our results also show why a single tolerable-error value does not describe every situation. At 2\% measurement error, the tolerable-error analysis showed a strong decline because it includes small deposition errors, where most mirrors would already pass without rescue. At a fixed 2\% deposition error, however, the rescue was closer to neutral: it saved 547 mirrors and broke 609. These findings are not contradictory. They describe different parts of the error range. Whether the rescue is useful therefore depends partly on the normal accuracy of the coating process.
+
+We further tested whether the damage at 2\% measurement error came mainly from applying rescue to every mirror. A selective method was tested in which rescue was used only when the measured coating was predicted to fail. This reduced the number of designs that performed very poorly at the smallest deposition error. However, it still performed worse than no rescue for more designs than it helped. The reason is that the decision to rescue also depends on imperfect measurements. A mirror may be incorrectly judged as failing or passing. Selective rescue alone cannot solve the problem when the measurements are too inaccurate.
+
+For a real coating process, the important question is therefore whether the monitoring system can measure layer thicknesses more accurately than the deposition process can control them. If it cannot, redesigning the remaining layers may introduce more error than it removes.
+
+\subsection{Quiet designs and manufacturing reliability}
+
+The study also examined whether rescue could make quieter coating designs as reliable as designs with higher thermal noise. This matters because the coating design must balance two goals: low thermal noise and reliable optical performance.
+
+Without rescue, the quieter designs were generally more fragile. Their median tolerable error was 1.00\%, compared with 1.31\% for the noisier group. With perfect measurement, rescue raised the quiet group's median tolerable error to 1.56\%, higher than the noisier group's value without rescue. In principle, this means that a quieter design could become a realistic option without requiring the same level of deposition accuracy.
+
+However, this advantage depended on measurement quality. With 1\% measurement error, the quiet group's median tolerable error fell to 1.05\%. At 2\% measurement error, most quiet designs performed poorly. The quieter designs therefore need more accurate measurements to benefit from rescue.
+
+This means the method does not remove the trade-off between thermal noise and manufacturing reliability. It can reduce that trade-off under good measurement conditions, but it cannot make every quiet design robust. The measurement system may be just as important as the coating design itself.
+
+\subsection{Shared errors require a different correction}
+
+The rescue was much less effective against shared errors. In this model, all layers receive the same relative thickness error. Unlike independent errors, these changes do not partly cancel across the coating. Instead, they shift the whole stack in the same direction.
+
+At 1\% shared error, redesigning four layers improved the median pass rate, but no design reached the required 95\% pass rate. Redesigning more layers improved the result further. With up to 12 layers redesigned, the median pass rate increased from 75.5\% to 88\%, but only two of the 32 designs reached 95\%.
+
+This suggests that the main problem is not simply that four layers are too few. A shared error changes the optical behavior of the whole stack. The final layers can adjust the light reflected from the layers below, but they cannot fully reverse the shift caused by changing the thickness of the entire coating. A global optimizer also gave a similar result, suggesting that the limitation is not only caused by the local optimization method.
+
+This finding is important when considering the Advanced LIGO end-mirror problem. The reported problem involved a systematic thickness error that left the infrared transmission within its required range but increased the green transmission by about an order of magnitude. Our shared-error model suggests that redesigning the final layers could provide some correction, but would not reliably bring the mirrors back to the required pass rate.
+
+However, our model does not reproduce the real Advanced LIGO problem in full. When all layers were scaled in our simulation, the 1064~nm transmission also moved outside its required range. The real coating design was different, and we could not find the size of its thickness error in published work. The comparison therefore supports a similar general point about systematic errors, but it does not establish exactly how the rescue would have performed on the actual Advanced LIGO mirrors.
+
+A more suitable response to shared errors may be to identify and correct the deposition-rate error itself. Measurements from the layers already made could help estimate whether the machine is consistently depositing layers too thick or too thin. The deposition process could then be recalibrated before continuing. This approach was not tested in the present study.
+
+\subsection{Thermal-noise cost}
+
+The rescue did not produce a meaningful increase in thermal noise. Across all 32 designs at 2\% deposition error, the median change was $-$0.02\%. The full thermal-noise calculation also showed that the largest increase for an individual mirror was about 1\%.
+
+This is expected to some extent because the rescue changes only a few layers in a 40-layer coating, so its effect on the total coating noise is limited. More importantly, the optimization does not appear to gain manufacturing tolerance by simply adding more of the higher-loss material.
+
+This result is encouraging because any practical rescue method must preserve the low thermal noise required for gravitational-wave detection. However, the small change in noise should not be interpreted as meaning that thermal noise is irrelevant to the optimization. The result applies to the materials, coating structure, and noise model used here. Other coating designs may behave differently.
+
+\subsection{Practical meaning and future work}
+
+Taken together, our results suggest that the rescue method could be useful for reducing the effect of random layer-to-layer thickness errors. It requires an additional calculation after measuring the deposited layers, but does not require a new coating machine. It may also allow some designs with lower thermal noise to be used without requiring extremely tight deposition control.
+
+However, the method is not a general solution to coating errors. It depends on accurate measurements, and works best against independent errors. It provides only limited correction for shared errors. The results also show that the number of layers redesigned matters. However, we have not established the best number across the full range of conditions yet.
+
+Several steps are needed before the method can be considered for an actual coating process. First, the measurement accuracy and the pattern of measurement errors in real coating machines must be studied. Particularly, measurement errors may be correlated between layers or may build up during a coating run. Second, the method should be tested with mixed error models that include both independent and shared errors. Third, future simulations should include refractive-index errors, material dispersion, absorption, and uneven layer thickness across the mirror.
+
+The rescue strategy itself could also be improved. Redesigning six or eight layers appears promising, but it was tested at only one deposition error for each error model and needs to be tested across all error sizes and measurement conditions. A method that estimates shared errors and adjusts the deposition process may be more useful for systematic errors than simply redesigning the final layers. Finally, experimental work is needed to check whether the redesigned thicknesses can be deposited reliably within the limits of a real coating machine.
+
+Overall, this study shows that redesigning the final layers can improve tolerance to independent thickness errors without a meaningful thermal-noise penalty. The improvement is not automatic: it depends on measurements being more accurate than the deposition process. Shared errors remain a separate problem that requires a different approach.

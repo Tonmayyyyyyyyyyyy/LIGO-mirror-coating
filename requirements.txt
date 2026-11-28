@@ -1,0 +1,6 @@
+# Exact versions used for every result in the paper (Python 3.13.18, Linux).
+OptimalBragg==1.0.2
+numpy==2.5.3
+scipy==1.18.1
+matplotlib==3.11.2
+pytest==9.1.1

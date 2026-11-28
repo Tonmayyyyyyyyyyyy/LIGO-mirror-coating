@@ -1,0 +1,4 @@
+seed 19: 41s, T1064 5.02 ppm, T532 2.65%, proxy/QW 0.977
+  max layer difference vs lownoise_seed5: 73.56%
+  max layer difference vs seed2: 77.69%
+  max layer difference vs robust_seed9: 49.97%

@@ -1,0 +1,3 @@
+ k  dep%  meas%  pass   +/-  noise%
+ 4  1.00   0.00  0.83  0.03   -0.57
+saved results/revision/de_shared/sweep_seed6.csv (130 s)

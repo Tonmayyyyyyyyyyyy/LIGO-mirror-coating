@@ -1,0 +1,8 @@
+
+sturdy: design ASD 6.678e-21 m/rtHz
+  meas 0%: full-formula change vs design, no rescue -0.01%, k=4 -0.21%; rescue minus no rescue -0.20% (range -0.64% to +0.17%); proxy said -0.34%
+  meas 1%: full-formula change vs design, no rescue -0.01%, k=4 -0.19%; rescue minus no rescue -0.18% (range -0.62% to +0.29%); proxy said -0.31%
+
+quiet: design ASD 6.185e-21 m/rtHz
+  meas 0%: full-formula change vs design, no rescue -0.01%, k=4 -0.14%; rescue minus no rescue -0.13% (range -0.74% to +0.51%); proxy said -0.23%
+  meas 1%: full-formula change vs design, no rescue -0.01%, k=4 -0.16%; rescue minus no rescue -0.15% (range -0.85% to +0.55%); proxy said -0.23%

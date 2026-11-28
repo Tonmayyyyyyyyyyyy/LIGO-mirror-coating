@@ -1,0 +1,28 @@
+
+sturdy: design T1064 5.05 ppm, T532 2.50%
+  all layers:
+    smallest thicker error giving 10x: +3.25% -> T532 33.7%, T1064 6.82 ppm (OUT of spec)
+    smallest thinner error giving 10x: -2.25% -> T532 29.4%, T1064 7.98 ppm (OUT of spec)
+    532 nm first leaves the 1-4% window at -0.75%
+  Ta2O5 only:
+    smallest thicker error giving 10x: +6.25% -> T532 31.4%, T1064 8.74 ppm (OUT of spec)
+    smallest thinner error giving 10x: -3.50% -> T532 29.2%, T1064 6.75 ppm (OUT of spec)
+    532 nm first leaves the 1-4% window at -1.25%
+  SiO2 only:
+    smallest thicker error giving 10x: +6.00% -> T532 26.7%, T1064 5.21 ppm (in spec)
+    smallest thinner error giving 10x: -9.00% -> T532 25.2%, T1064 21.85 ppm (OUT of spec)
+    532 nm first leaves the 1-4% window at -2.50%
+
+quiet: design T1064 5.31 ppm, T532 2.47%
+  all layers:
+    smallest thicker error giving 10x: +4.00% -> T532 25.4%, T1064 8.14 ppm (OUT of spec)
+    smallest thinner error giving 10x: -1.00% -> T532 53.5%, T1064 6.24 ppm (OUT of spec)
+    532 nm first leaves the 1-4% window at -0.50%
+  Ta2O5 only:
+    smallest thicker error giving 10x: +6.75% -> T532 27.3%, T1064 5.15 ppm (in spec)
+    smallest thinner error giving 10x: -2.25% -> T532 25.1%, T1064 6.55 ppm (OUT of spec)
+    532 nm first leaves the 1-4% window at -1.00%
+  SiO2 only:
+    smallest thicker error giving 10x: +8.50% -> T532 25.9%, T1064 15.27 ppm (OUT of spec)
+    smallest thinner error giving 10x: -1.50% -> T532 35.8%, T1064 5.85 ppm (in spec)
+    532 nm first leaves the 1-4% window at -0.50%

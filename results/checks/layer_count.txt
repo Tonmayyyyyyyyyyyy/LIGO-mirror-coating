@@ -1,0 +1,8 @@
+18 pairs, no cap: T =   18.77 ppm, Brownian ASD = 6.173e-21 m/rtHz
+18 pairs, L cap : T =    8.93 ppm, Brownian ASD = 6.181e-21 m/rtHz
+19 pairs, no cap: T =    9.30 ppm, Brownian ASD = 6.350e-21 m/rtHz
+19 pairs, L cap : T =    4.42 ppm, Brownian ASD = 6.357e-21 m/rtHz
+20 pairs, no cap: T =    4.61 ppm, Brownian ASD = 6.521e-21 m/rtHz
+20 pairs, L cap : T =    2.19 ppm, Brownian ASD = 6.528e-21 m/rtHz
+21 pairs, no cap: T =    2.28 ppm, Brownian ASD = 6.688e-21 m/rtHz
+21 pairs, L cap : T =    1.09 ppm, Brownian ASD = 6.695e-21 m/rtHz

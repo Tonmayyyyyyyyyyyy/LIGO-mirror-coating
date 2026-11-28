@@ -1,0 +1,6 @@
+design,k,dep,meas,trials,pass_rate,stderr,noise_change,model,spec,method,t2_target,noise_weight,abs_nm,gate,seed
+seed8.npy,2,0.02,0.0,200,0.845,0.02559052559053839,0.00118021103128925,independent,aligo,local,0.025,0.05,0.0,0,0
+seed8.npy,4,0.02,0.0,200,0.95,0.015411035007422448,-0.0002514252603572886,independent,aligo,local,0.025,0.05,0.0,0,0
+seed8.npy,6,0.02,0.0,200,0.965,0.012995191418367032,-0.0013436375806822904,independent,aligo,local,0.025,0.05,0.0,0,0
+seed8.npy,8,0.02,0.0,200,0.96,0.013856406460551024,-0.0035317869516566236,independent,aligo,local,0.025,0.05,0.0,0,0
+seed8.npy,12,0.02,0.0,200,0.92,0.019183326093250873,-0.008159982988192618,independent,aligo,local,0.025,0.05,0.0,0,0

@@ -1,0 +1,35 @@
+% Source: results/stats/stats_checks.txt (below = 0) and results/revision/reanalysis.txt (below = 0.25%).
+\appendix
+\section{All rank correlations}
+\label{app:corr}
+
+Table~\ref{tab:corr} lists all sixteen Spearman correlations we tested. ``Sturdiness'' is a design's tolerable error without rescue (fine scan) or its pass rate without rescue (single points). ``Gain'' is the change from rescue, and ``loss'' is the drop from perfect to 2\% measurement error. Holm correction is over all sixteen. In the fine scan, ``below'' is entered as 0; entering it as 0.25\% gives $\rho = +0.30$, $+0.47$ and $-0.42$ for the last three fine-scan rows (uncorrected $p = 0.09$, 0.006 and 0.02).
+
+\begin{table}[h]
+\centering
+\caption{Spearman correlations across the 32 designs.}
+\label{tab:corr}
+\footnotesize
+\begin{tabular}{llccc}
+\toprule
+Run & Correlation & $\rho$ & $p$ & Holm $p$ \\
+\midrule
+Fine scan & noise proxy vs sturdiness & $+0.67$ & $3\times10^{-5}$ & 0.0004 \\
+ & sturdiness vs gain, perfect measurement & $+0.30$ & 0.09 & 0.6 \\
+ & sturdiness vs gain, 2\% measurement & $+0.54$ & 0.001 & 0.01 \\
+ & sturdiness vs loss & $-0.52$ & 0.002 & 0.02 \\
+Independent 2\% & noise proxy vs sturdiness & $+0.66$ & $4\times10^{-5}$ & 0.0005 \\
+ & sturdiness vs gain, perfect measurement & $-0.16$ & 0.4 & 0.8 \\
+ & sturdiness vs gain, 2\% measurement & $+0.56$ & 0.0008 & 0.008 \\
+ & sturdiness vs loss & $-0.87$ & $7\times10^{-11}$ & $10^{-9}$ \\
+Shared 1\% & noise proxy vs sturdiness & $+0.50$ & 0.003 & 0.02 \\
+ & sturdiness vs gain, perfect measurement & $-0.11$ & 0.5 & 0.8 \\
+ & sturdiness vs gain, 2\% measurement & $+0.29$ & 0.1 & 0.6 \\
+ & sturdiness vs loss & $-0.88$ & $5\times10^{-11}$ & $9\times10^{-10}$ \\
+Shared 2\% & noise proxy vs sturdiness & $-0.23$ & 0.2 & 0.6 \\
+ & sturdiness vs gain, perfect measurement & $-0.66$ & $4\times10^{-5}$ & 0.0005 \\
+ & sturdiness vs gain, 2\% measurement & $-0.57$ & 0.0007 & 0.007 \\
+ & sturdiness vs loss & $-0.29$ & 0.1 & 0.6 \\
+\bottomrule
+\end{tabular}
+\end{table}

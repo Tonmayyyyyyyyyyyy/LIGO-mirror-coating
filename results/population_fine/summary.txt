@@ -1,0 +1,56 @@
+32 designs. Tolerable error = largest deposition error with 95% pass (independent errors, 200 mirrors per point, same mirrors for every design).
+Rescue = top 4 layers. In brackets: 95% range from bootstrap.
+
+design                            no rescue        rescue, meas 0%   meas 1%   meas 2%
+seed15                0.83% [0.73-0.94]   1.05% [0.94-1.13]   0.82%    below
+seed28                0.85% [0.79-0.96]   1.52% [1.19-1.60]   0.88%    below
+seed22                0.89% [0.83-1.02]   1.23% [1.13-1.53]   1.00%    below
+lownoise_seed5_t2.5   0.90% [0.82-1.02]   0.86% [0.77-1.01]   below    below
+seed24                0.90% [0.82-1.02]   1.52% [1.18-1.59]   0.92%    below
+seed13                0.94% [0.87-1.04]   1.16% [1.00-1.46]   0.83%    below
+seed29                0.94% [0.86-1.05]   1.70% [1.48-2.00]   1.50%    below
+seed25                0.95% [0.86-1.05]   1.04% [0.94-1.11]   below    below
+seed1                 0.96% [0.83-1.05]   0.66% [0.58-0.82]   below    below
+seed7                 0.97% [0.86-1.06]   1.11% [1.06-1.18]   0.78%    below
+seed4                 1.00% [0.88-1.08]   1.65% [1.57-1.81]   1.08%    below
+seed23                1.02% [0.92-1.08]   1.65% [1.57-1.83]   0.46%    below
+seed5                 1.04% [0.92-1.15]   1.58% [1.50-1.68]   1.10%    below
+seed8                 1.05% [0.96-1.13]   2.00% [1.60-2.15]   1.55%    below
+seed10                1.13% [1.02-1.27]   2.30% [1.71-2.54]   1.62%    below
+seed18                1.13% [1.08-1.23]   1.54% [1.23-1.64]   1.17%    below
+seed14                1.15% [1.08-1.33]   2.30% [1.91-2.40]   2.00%    1.33%
+seed20                1.15% [1.10-1.38]   1.66% [1.58-1.81]   1.63%    1.14%
+seed2_t2.5            1.16% [1.10-1.50]   1.70% [1.61-1.83]   1.54%    below
+seed26                1.17% [1.11-1.38]   1.88% [1.68-2.25]   1.67%    below
+seed30                1.23% [1.14-1.57]   1.72% [1.61-1.92]   1.61%    0.94%
+seed6                 1.37% [1.30-1.50]   2.25% [1.92-2.33]   1.83%    0.58%
+seed19                1.39% [1.34-1.50]   2.10% [1.92-2.29]   1.93%    1.42%
+seed3                 1.47% [1.36-1.61]   2.35% [2.05-2.54]   2.12%    1.68%
+seed16                1.50% [1.23-1.59]   1.88% [1.71-2.08]   1.80%    1.47%
+seed9                 1.56% [1.43-1.65]   2.08% [1.90-2.28]   1.95%    1.60%
+seed12                1.56% [1.43-1.76]   2.38% [2.33-2.48]   2.31%    1.33%
+seed17                1.58% [1.47-1.69]   2.12% [1.91-2.32]   2.00%    1.83%
+seed2                 1.71% [1.59-1.83]   2.35% [1.94-2.51]   2.06%    1.63%
+robust_seed9_t2.5     1.79% [1.65-2.01]   2.54% [2.41-2.76]   2.50%    2.38%
+seed27                1.86% [1.71-2.25]   2.50% [2.40-2.64]   2.45%    1.97%
+seed11                2.03% [1.92-2.18]   2.17% [2.10-2.29]   2.15%    1.88%
+
+Median tolerable error over 32 designs:
+  no rescue                        1.14%   (middle half of designs: 0.96-1.48%)
+  rescue, perfect measurement      1.71%   (middle half of designs: 1.52-2.19%)
+  rescue, 1% measurement error     1.58%   (middle half of designs: 0.91-1.96%)
+  rescue, 2% measurement error     0.00%   (middle half of designs: 0.00-1.43%)
+
+Counts:
+  perfect measurement   : rescue raises tolerable error in 30 of 32 (27 with no overlap of 95% ranges); lowers it in 2 (1 clearly)
+  1% measurement error  : rescue raises tolerable error in 25 of 32 (14 with no overlap of 95% ranges); lowers it in 7 (3 clearly)
+  2% measurement error  : rescue raises tolerable error in 7 of 32 (1 with no overlap of 95% ranges); lowers it in 25 (18 clearly)
+
+Ratio rescued / not rescued (perfect measurement), designs with a nonzero baseline (32): median 1.43, range 0.68-2.04
+
+Spearman rank correlations:
+  sturdiness (no-rescue tolerable error) vs gain, perfect measurement: rho = +0.30, p = 0.092
+  sturdiness vs gain, 2% measurement error: rho = +0.54, p = 0.001
+  sturdiness vs loss from 0 to 2% measurement error: rho = -0.52, p = 0.002
+
+Noise change from rescue (fast proxy, mean over all error sizes): median -0.02%, range -0.43% to +0.19%

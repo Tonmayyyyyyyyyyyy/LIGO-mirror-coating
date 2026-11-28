@@ -1,0 +1,6 @@
+ k  dep%  meas%  pass   +/-  noise%
+ 0  2.00    nan  0.93  0.02   -0.03
+ 4  2.00   0.00  0.98  0.01   +0.03
+ 4  2.00   1.00  0.98  0.01   +0.01
+ 4  2.00   2.00  0.94  0.02   -0.06
+saved results/population/sweep_seed27.csv (28 s)

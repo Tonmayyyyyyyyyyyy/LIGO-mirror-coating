@@ -1,0 +1,148 @@
+\section{Methods}
+
+All simulations were written in Python~3.13 and use OptimalBragg~1.0.2~\cite{Venugopalan2024}, NumPy~2.5.3~\cite{Harris2020}, SciPy~1.18.1~\cite{Virtanen2020} and Matplotlib~3.11.2~\cite{Hunter2007}. The code, the 32 coating designs, all raw simulation outputs, and the scripts that produce every number and figure in this paper are in a public repository~\cite{Repo}. Its file \texttt{REPRODUCE.md} is a step-by-step guide to re-making the paper, and a single script (\texttt{scripts/reproduce\_all.sh}) runs all of it in about eleven hours on a two-core computer (five for the main study, six for the additional checks of Sec.~\ref{sec:checks}). All calculations are deterministic, so the same versions give the same numbers.
+
+\subsection{Coating model}
+
+We considered a 40-layer dielectric coating representative of an Advanced LIGO end test-mass mirror. The coating consists of alternating layers of high- and low-refractive-index materials: titania-doped tantala (Ti:Ta$_2$O$_5$) and silica (SiO$_2$), the two materials used in Advanced LIGO~\cite{aLIGO2015,Pinard2017}. Titania doping lowers the mechanical loss of tantala, which is why it replaced pure tantala~\cite{Harry2007}. The structure has 20 layers of each material, and the outermost layer, next to air, is a silica half-wave cap. The coating sits on a silica substrate. Following OptimalBragg, layers are numbered from the top: layer~0 is the cap (deposited last) and layer~39 touches the substrate (deposited first).
+
+We chose 40 layers because a quarter-wave stack of this size transmits 2.2~ppm at 1064~nm, safely below the 4--6~ppm window. This leaves the optimizer room to move away from quarter-wave thicknesses, which it must do to meet the 532~nm target and to reduce tantala, while still reaching 5~ppm. With 38 layers the quarter-wave stack already transmits 4.4~ppm, at the edge of the window, and with 36 layers it transmits 8.9~ppm, outside it. We did not vary the layer count in this study.
+
+The refractive indices of silica and titania-doped tantala were 1.45 and 2.06. The same index was used at 1064~nm and 532~nm, because OptimalBragg stores one value per material; we did not model dispersion. The Young's moduli were 60~GPa and 140~GPa, the Poisson ratios 0.17 and 0.23, and the mechanical loss angles $5\times10^{-5}$ and $2\times10^{-4}$ for silica and tantala, respectively. These are the values in the OptimalBragg material library, which takes them from Franc et al.~\cite{MaterialsSource}; we used the library values unchanged so that our noise numbers can be compared directly with other OptimalBragg results. Measured values for the Advanced LIGO coating materials are collected by Granata et al.~\cite{Granata2020}. The library also gives the silica substrate a Young's modulus of 60~GPa, lower than the 72.7~GPa of fused silica; we repeated the noise calculation of Sec.~\ref{sec:noiseres} with 72.7~GPa to check that this does not matter.
+
+The starting point was a quarter-wave stack at 1064~nm with a half-wave silica cap, the classic high-reflector design~\cite{Macleod2018}. The nominal quarter-wave thicknesses were 129.1~nm for tantala and 183.4~nm for silica, and the cap was 366.9~nm. The cap thickness was kept the same in every design and every rescue, so all designs share the same outer layer and differ only underneath it. The substrate temperature was set to 295~K, room temperature, at which Advanced LIGO operates.
+
+\subsection{Optical and thermal-noise calculations}
+
+The transmission of each coating was calculated at 1064~nm and 532~nm with the transfer-matrix method, the standard method for thin-film multilayers~\cite{Macleod2018}. Each layer is represented by a $2\times2$ characteristic matrix, and the response of the whole coating is the product of these matrices. We used normal incidence, since the arm-cavity beam meets the end mirror head-on. To check the implementation, we compared it with the textbook reflectance of a single quarter-wave tantala layer on silica, $R = \left[(n_s - n_1^2)/(n_s + n_1^2)\right]^2$; the two agree to better than $10^{-6}$.
+
+A coating \emph{passes} when it meets the Advanced LIGO end test-mass specification~\cite{E0900068}:
+\begin{equation}
+4~\mathrm{ppm} \le T_{1064} \le 6~\mathrm{ppm}
+\quad\text{and}\quad
+0.01 \le T_{532} \le 0.04 .
+\label{eq:pass}
+\end{equation}
+Thermal noise is not part of the pass test. It is a separate property of a design, and the rescue's effect on it is our third question, so we report it separately.
+
+Coating Brownian noise was computed with the formulation of Hong et al.~\cite{Hong2013}, as implemented in OptimalBragg. We report its amplitude spectral density at 100~Hz, in the frequency band where coating thermal noise matters most for Advanced LIGO~\cite{aLIGO2015}, for a Gaussian beam radius of 6.2~cm, the Advanced LIGO end-mirror value~\cite{aLIGO2015}. The full calculation is too slow to run inside the optimizers and the Monte Carlo runs, where it would be needed millions of times. There we used a weighted sum of the layer thicknesses,
+\begin{equation}
+N_{\mathrm{proxy}} = d_{\mathrm{SiO_2}} + \gamma_H\, d_{\mathrm{Ti:Ta_2O_5}}, \qquad \gamma_H = 3.888,
+\label{eq:proxy}
+\end{equation}
+where $d_{\mathrm{SiO_2}}$ and $d_{\mathrm{Ti:Ta_2O_5}}$ are the total \emph{physical} thicknesses of each material. The proxy weights tantala more because tantala has the larger mechanical loss, and coating Brownian noise grows with the loss and thickness of each material~\cite{Harry2002,Harry2007}. The weight $\gamma_H$ is computed by OptimalBragg (\texttt{brownian\_proxy}) from the material values above, including the substrate's Young's modulus, so it would change with different material values. The Advanced LIGO specification~\cite{E0900068} writes the same kind of proxy in terms of \emph{optical} thickness, which multiplies the two terms by $n_L$ and $n_H$; our form therefore gives tantala a weight $n_H/n_L = 1.42$ times smaller relative to silica. Across the 32 designs, both forms rank the designs almost exactly as the full calculation does (Spearman $\rho = 0.996$ for ours, $0.999$ for the optical form), so the choice does not change which designs are quiet. It does change the size of small noise differences, which is why the noise answer in Sec.~\ref{sec:noiseres} uses the full calculation.
+
+The tantala loss angle is not well known, so we repeated the full calculation with $3.6\times10^{-4}$, the value used by Venugopalan et al.~\cite{Venugopalan2024}. Every noise value rises by 25--29\% across our 32 designs. No pass rate changes, because passing depends only on transmission, which does not involve the loss angle.
+
+\subsection{Coating designs}
+
+Many different layer-thickness designs meet the transmission targets, and they can differ in how well they survive thickness errors. A result found on one design might not hold on another, so we studied a population of 32 designs.
+
+Each design was produced by differential evolution~\cite{Storn1997} (SciPy), a global optimizer that suits this problem because the cost has many local minima; Venugopalan et al. also used global optimization for this kind of coating~\cite{Venugopalan2024}, and Villar et al. showed experimentally that a coating with optimized, non-quarter-wave thicknesses has lower thermal noise~\cite{Villar2010}. It minimized
+\begin{equation}
+C = 5\left[\max\!\left(0,\ \log_{10}\frac{T_{1064}}{5\times10^{-6}}\right)\right]^2
+  + 3\left[\log_{10}\frac{T_{532}}{0.025}\right]^2
+  + 0.5\,\frac{N_{\mathrm{proxy}}}{N_{\mathrm{proxy},0}} ,
+\label{eq:designcost}
+\end{equation}
+where $N_{\mathrm{proxy},0}$ is the proxy of the starting quarter-wave stack. Each term has a purpose. The first pushes $T_{1064}$ down to 5~ppm, the center of its window, and does not penalize lower values; in practice the 32 designs land between 4.46 and 5.55~ppm. The second aims $T_{532}$ at 2.5\%, the center of the 1--4\% window, so that errors have room in both directions. The third keeps the noise low. Logarithms are used because the two transmissions differ by four orders of magnitude, and a ratio error (say 20\% too high) should cost the same at either wavelength. The weights 5, 3 and 0.5 were set by hand: the 1064~nm term gets the largest weight because its window is the narrowest relative to its target, and the noise weight is small enough that the transmission targets are met first. We did not tune them.
+
+The cap was held fixed, and the other 39 thicknesses could vary between 0.3 and 1.7 times their quarter-wave values. These bounds are wide enough for strongly non-quarter-wave designs but rule out layers that are almost absent or several times too thick. The optimizer settings were: population size 8, at most 400 generations, tolerance $10^{-10}$, Sobol initialization~\cite{Sobol1967} (which spreads the starting points evenly) and a final local polish. These settings make one design in under a minute; only the random seed changes from one design to the next, so any design can be regenerated exactly from its seed.
+
+We ran the optimizer with seeds 1 to 30. Thirty was set by computing time: the main study takes about five hours, and 30 designs are enough for a sign test to detect a consistent direction of change. The seed-21 design misses the 1064~nm target even without errors ($T_{1064} = 6.35$~ppm), so it was excluded, leaving 29. Three more designs came from an earlier exploratory run of the same kind of optimization. The script of that run was not kept, so these three cannot be regenerated, but the design files are in the repository and every result that uses them can be reproduced. We included them as ordinary members of the population rather than discard designs that meet the specification. In the rest of the paper we call the seeded designs S1 to S30 by seed (29 designs, since there is no S21) and the three exploratory designs E1, E2 and E3, in order of increasing tolerable error without rescue (Sec.~\ref{sec:q1}). The final population has 32 designs, all of which pass Eq.~\eqref{eq:pass} with no errors. Their full noise at 100~Hz ranges from $6.18$ to $6.72\times10^{-21}~\mathrm{m}/\sqrt{\mathrm{Hz}}$.
+
+\subsection{Deposition and measurement errors}
+
+Manufacturing imperfections were modeled as thickness errors. The actual thickness of layer $i$ is
+\begin{equation}
+d_i = d_i^{(0)}\,(1+\epsilon_i),
+\end{equation}
+where $d_i^{(0)}$ is the planned thickness and $\epsilon_i$ the relative deposition error. We used relative errors because deposition errors are usually quoted as a fraction of the thickness~\cite{Tikhonravov2012}, and errors in deposition rate or timing scale with thickness. Errors were drawn from a normal distribution, the standard choice for small random errors. Drawing a random error for each layer and repeating many times is also how earlier tolerance studies of gravitational-wave and other coatings tested their designs~\cite{Venugopalan2024,Pierro2026,Poitras2025}.
+
+We studied two error models, which are the two extreme cases. In the \emph{independent} model, every layer gets its own error, $\epsilon_i \sim \mathcal{N}(0,\sigma^2)$; this represents random layer-to-layer variation. In the \emph{shared} model, one error $\epsilon \sim \mathcal{N}(0,\sigma^2)$ is applied to all 40 layers, including the layers re-made during the rescue; this represents a systematic deviation, where the process makes every layer too thick or too thin by the same fraction, as happened in the Advanced LIGO end mirrors~\cite{aLIGO2015}. Real processes are likely to be a mixture of the two. In both models the errors for all 40 layers are drawn before deposition starts, so the same mirror can be made with and without rescue and compared.
+
+A deposition system does not see the true thicknesses; it estimates them from optical or quartz-crystal monitoring. Fitting layer thicknesses from measured spectra is difficult, and the fitted values carry errors of their own~\cite{Melzig2024}. We modeled the measured thickness of a deposited layer as
+\begin{equation}
+d_i^{(\mathrm{meas})} = d_i\,(1+\mu_i), \qquad \mu_i \sim \mathcal{N}(0,\sigma_{\mathrm{meas}}^2),
+\end{equation}
+with a new $\mu_i$ for every layer. Measurement errors in a real system can be correlated from layer to layer and can build up during a run~\cite{Tikhonravov2006}; we used the simplest model, independent errors, and return to this in the Discussion. There is no single agreed value for $\sigma_{\mathrm{meas}}$, so we treated it as a parameter and used 0\%, 1\% and 2\% in the main runs, and 0.5\% and 1.5\% in additional runs to locate where the rescue stops helping. Zero gives the best case the rescue can reach. The range is guided by reported values: typical deposition errors of about 1~nm plus 1\%~\cite{Tikhonravov2012}, run-to-run thickness spreads of 0.9--1.5\% and, for one film, a 4.5~nm (2.6\%) difference between optical and quartz-crystal readings~\cite{Wilbrandt2008}, and fitted thicknesses that are off by up to about 4~nm per layer~\cite{Melzig2024}.
+
+\subsection{Measurement-informed rescue}
+
+One simulated mirror is made as follows.
+\begin{enumerate}
+\item Draw the deposition errors for all 40 layers.
+\item Deposit layers 39 down to 5 with their errors.
+\item Measure these 35 layers, with measurement error.
+\item Rescue: holding the \emph{measured} thicknesses fixed, find new thicknesses for layers 1--4 (the four layers just beneath the cap) that minimize
+\begin{equation}
+C_{\mathrm{rescue}} = 5\left[\log_{10}\frac{T_{1064}}{5\times10^{-6}}\right]^2
+  + 3\left[\log_{10}\frac{T_{532}}{0.025}\right]^2
+  + 0.05\,\frac{N_{\mathrm{proxy}}}{N_{\mathrm{proxy},0}^{(\mathrm{design})}} ,
+\label{eq:rescuecost}
+\end{equation}
+where $N_{\mathrm{proxy},0}^{(\mathrm{design})}$ is the proxy of the nominal design. Each new thickness is limited to 0.5--1.5 times its planned value. The cap is never changed.
+\item Deposit layers 4 to 0 with the new thicknesses and the errors drawn in step~1. The rescued layers are therefore not made perfectly.
+\item Judge the finished mirror on its \emph{true} thicknesses with Eq.~\eqref{eq:pass}, and record the change in $N_{\mathrm{proxy}}$ relative to the design.
+\end{enumerate}
+The no-rescue control is the same procedure with $k=0$ rescued layers: the mirror is made exactly as designed, with the same deposition errors.
+
+The rescue follows the idea of deposition-error compensation introduced by Sullivan and Dobrowolski~\cite{Sullivan1992}: estimate the thicknesses of the layers already deposited, then re-design the layers that remain. We made it as simple as possible: one measurement and one re-optimization, just before the last few layers. The reasons for each remaining choice are as follows.
+
+\emph{Cost function.} Eq.~\eqref{eq:rescuecost} has the same transmission terms as Eq.~\eqref{eq:designcost}, with one change: the 1064~nm term penalizes errors on both sides of 5~ppm, because the rescue should bring the mirror back to the middle of the window, not merely below 6~ppm. The noise weight is ten times smaller than in the design cost, because the rescue's job is to fix the transmission; the noise term only breaks ties between otherwise equal solutions. To check that this weight does not drive the results, we repeated the rescue on one design with weights 0, 0.05 and 0.5, using the same 200 mirrors at independent errors of 2\% and 3\% and measurement errors of 0 and 1\%. All pass rates agreed within 1 percentage point (for example, 88.5\%, 88.0\% and 88.0\% at 3\% error and perfect measurement), smaller than their standard error of about 2.3 points.
+
+\emph{Thickness limits.} The re-optimized layers may change by at most $\pm50\%$. This is narrower than the design bounds because the rescue is a correction to an existing design, not a new design, and it keeps the rescued layers within a range a deposition system could be expected to hit.
+
+\emph{Optimizer.} We used L-BFGS-B~\cite{Byrd1995} (SciPy), a fast gradient-based local method that handles the thickness limits directly; one rescue takes a few seconds, short enough to run between two layers in a real deposition run. Because a local method can stop in a poor minimum, it was started three times, from the planned thicknesses and from 0.9 and 1.1 times them, and the best result was kept. We checked against a slow global optimizer in Section~\ref{sec:checks}.
+
+\emph{Number of rescued layers.} We chose $k=4$ before the population was made, from a test on one design (E3) with 400 mirrors per point, independent errors of 1--3\% and measurement errors of 0--2\%. There, $k = 2$, 4 and 6 gave tolerable errors of 2.51\%, 2.65\% and 2.47\% with overlapping uncertainty ranges, so 2 to 6 layers seemed to work about equally well, and 4 sits in the middle. E3 is one of the sturdiest designs, close to the ceiling of the test, so this choice was not well founded. We therefore also ran $k = 2$, 4, 6, 8 and 12 on all 32 designs at one point of each error model (Sec.~\ref{sec:kres}). All other results use $k = 4$.
+
+\emph{Every mirror is rescued.} The rescue is applied to every mirror, including mirrors that would already have passed. This is the simplest rule, and it does not require deciding in advance which mirrors need help. Because it can also harm mirrors that were fine, we tested a second rule, the \emph{gated} rescue: the measured stack is first finished, on paper, with the planned top layers, and the mirror is rescued only if this predicted mirror fails Eq.~\eqref{eq:pass}. Otherwise it is made as designed. The gate uses the same, imperfect, measured thicknesses as the rescue.
+
+\emph{Errors on rescued layers.} The re-made layers receive the errors drawn in step~1 (and, in the shared model, the same shared error). Assuming perfect re-made layers would overstate what the rescue can do.
+
+\subsection{Monte Carlo simulations}
+
+For each combination of design, error model, deposition error $\sigma$, measurement error $\sigma_{\mathrm{meas}}$ and rescue condition, we simulated 200 mirrors and recorded the pass rate $P = N_{\mathrm{pass}}/N_{\mathrm{total}}$, with standard error $\sqrt{P(1-P)/N_{\mathrm{total}}}$. With 200 mirrors the standard error is about 1.5 percentage points near a 95\% pass rate and 3.5 points near 50\%. This was the largest sample that fit our computing time across all runs. Three main sets of runs were made on all 32 designs, each with $k = 0$ and $k = 4$ at $\sigma_{\mathrm{meas}} = 0$, 1\% and 2\%:
+\begin{enumerate}
+\item independent errors, $\sigma$ from 0.25\% to 3.00\% in steps of 0.25\%, used to find the tolerable error;
+\item independent errors at $\sigma = 2\%$, a single point at which most designs pass 50--95\% of mirrors without rescue, so changes in either direction are visible;
+\item shared errors at $\sigma = 1\%$ and 2\%.
+\end{enumerate}
+Six further sets, also on all 32 designs with 200 mirrors per point, were added later to test specific points of the main results:
+\begin{enumerate}\setcounter{enumi}{3}
+\item the gated rescue, on the grid of set~1;
+\item $\sigma_{\mathrm{meas}} = 0.5\%$ and 1.5\% at $\sigma = 0.25$, 0.5, 1 and 2\% (independent errors);
+\item $k = 2$, 4, 6, 8 and 12 at independent $\sigma = 2\%$ and shared $\sigma = 1\%$, perfect measurement;
+\item the rescue with a global optimizer (Sec.~\ref{sec:checks}) at shared $\sigma = 1\%$, $k = 4$, perfect measurement;
+\item sets 2 and 3 repeated with a different set of 200 mirrors (second master seed);
+\item the full Brownian noise of every mirror of set~2, with and without rescue.
+\end{enumerate}
+The range of $\sigma$ covers the roughly 1\% errors reported for real processes~\cite{Tikhonravov2012,Wilbrandt2008} and extends to 3\%, above the largest tolerable error of any design even with rescue (2.54\%). The 0.25\% step sets the resolution of the tolerable error. Shared errors were run at two points only, because at 2\% the median pass rate is already 40\%.
+
+The random numbers were controlled so that every comparison is paired. In all runs of sets 1--9, mirror $i$ at deposition error $\sigma$ always receives the same errors, generated by NumPy's \texttt{default\_rng} with seed $[0,\ \mathrm{round}(10^5\sigma),\ i]$. Its measurement errors come from a separate generator with seed $[0,\ \mathrm{round}(10^5\sigma),\ \mathrm{round}(10^5\sigma_{\mathrm{meas}})+1,\ i]$, so that changing the measurement error does not change the deposition errors. Every design, every rescue condition and every measurement level therefore sees the same mirrors, and differences between them come from the settings, not from chance. The second-seed runs (set 8) replace the leading 0 by 1, which gives a new set of mirrors. The checks on single designs (Sec.~\ref{sec:checks}, items 1--3) used their own seeds, which are set in their scripts.
+
+\subsection{Tolerable error and statistical analysis}
+
+The main metric is the \emph{tolerable error}: the deposition error $\sigma$ at which the pass rate falls to 95\%. We chose 95\% as a high-yield target, appropriate for optics that are expensive to coat. A different threshold changes the numbers, so we repeated the main comparisons with a 90\% threshold. Differences between tolerable errors are given in percentage points (pp) of $\sigma$. For each design and condition we took the first $\sigma$ step where the pass rate is below 95\% and interpolated linearly to the step before it, the simplest estimate between two measured points. If the pass rate was already below 95\% at $\sigma = 0.25\%$, we recorded the result as ``below'' and entered it as 0 in medians and counts. Leaving these cases out would drop exactly the designs on which the rescue did worst. Entering them as 0.25\% instead changes no median or count reported here, but it changes correlations that use differences between tolerable errors, so for those we report both. No curve stayed above 95\% up to $\sigma = 3\%$.
+
+The uncertainty of each tolerable error was estimated with a parametric bootstrap~\cite{Efron1979}: every pass count was redrawn 2000 times from a binomial distribution (random seed 0), the tolerable error was recomputed each time, and the central 95\% of the results was taken as the range. With 2000 draws, changing the bootstrap seed moves the range limits by at most 0.1\%, less than the 0.25\% step. We call a change ``clear'' when the ranges with and without rescue do not overlap. The bootstrap treats the two curves as if they had different mirrors; because they share mirrors, the true uncertainty of the difference is smaller, so this criterion is conservative.
+
+Across the population we report the median and interquartile range of the 32 values, rather than the mean and standard deviation, because the values are not normally distributed and include zeros. We also count the designs that improve or deteriorate, and use an exact two-sided binomial sign test (ties excluded) to ask how likely such counts would be if improvement and deterioration were equally likely. The sign test uses only the direction of each change, so it makes no assumption about the size of the changes. For the size, we report the median per-design change with a 95\% bootstrap interval (2000 resamples of the 32 designs, seed 0)~\cite{Efron1993}, and the Wilcoxon signed-rank test, which also uses the size of the changes.
+
+To test the rescue mirror by mirror, we re-ran one point of each error model (independent $\sigma = 2\%$ and shared $\sigma = 1\%$) and saved the pass/fail outcome of every mirror. This re-run was needed because the main runs stored only pass rates; it reproduced them exactly. For each design we counted the mirrors the rescue saved (fail to pass) and broke (pass to fail), and compared the two counts with an exact McNemar test~\cite{McNemar1947}, the standard test for paired pass/fail data. Because 32 designs were tested, we applied Holm correction~\cite{Holm1979}, which keeps the chance of any false positive across the 32 tests at 5\% and is less strict than the Bonferroni correction.
+
+Relations between design properties were measured with Spearman rank correlation~\cite{Spearman1904}, which uses only the order of the values and does not assume a straight-line relation. We tested whether the noise proxy of a design predicts its tolerable error without rescue (its sturdiness), and whether sturdiness predicts the gain from rescue and the loss caused by measurement error, at each of the four run points (fine scan, independent 2\%, shared 1\% and 2\%). This gives sixteen correlations, all listed in Appendix~\ref{app:corr}; Holm correction was applied over all sixteen.
+
+The 32 designs fall into two groups by noise, with a clear gap between them: 18 quiet designs ($6.18$--$6.31\times10^{-21}~\mathrm{m}/\sqrt{\mathrm{Hz}}$ at 100~Hz) and 14 noisy ones ($6.44$--$6.72\times10^{-21}$). We split the population at this gap, the largest difference between neighboring noise-proxy values, and report results for each group.
+
+\subsection{Additional checks}
+\label{sec:checks}
+
+Four checks were run on two designs, E1 and E3, which were chosen because they were the first designs available. They are the most fragile and the sturdiest of the three exploratory designs, but they are not the extremes of the population: E1 is the 4th most fragile and E3 the 3rd sturdiest of the 32.
+\begin{enumerate}
+\item \emph{Optimizer.} The same mirrors were rescued once with L-BFGS-B and once with differential evolution (at most 300 generations, population 15, tolerance $10^{-10}$, polish, seed 0), with 100 mirrors per case for both designs, both error models, $\sigma = 2\%$ and 3\%, and $\sigma_{\mathrm{meas}} = 0$ and 1\% (16 cases, 1600 mirrors). This tests whether the fast local optimizer misses rescues that a global search finds. Set~7 then repeated the comparison on all 32 designs at shared $\sigma = 1\%$, where the first check found the largest differences.
+\item \emph{Noise proxy.} For 40 mirrors per case at independent $\sigma = 2\%$ and $\sigma_{\mathrm{meas}} = 0$ and 1\%, the noise change from rescue was computed with both the proxy and the full Brownian calculation. Set~9 replaced this with the full calculation on all 32 designs.
+\item \emph{Failure modes.} For 200 mirrors per case, each failed mirror was classified by which target it missed and in which direction, to find out what limits the rescue.
+\item \emph{Size of the Advanced LIGO error.} To compare with the systematic error reported for the Advanced LIGO end mirrors~\cite{aLIGO2015}, all layer thicknesses (or only the tantala, or only the silica layers) were scaled by a common factor $1+e$, with $e$ from $-10\%$ to $+10\%$ in steps of 0.25\%, and we found the smallest $|e|$ that raises $T_{532}$ tenfold.
+\end{enumerate}

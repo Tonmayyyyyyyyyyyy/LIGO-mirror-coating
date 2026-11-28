@@ -1,0 +1,5 @@
+design,k,dep,meas,trials,pass_rate,stderr,noise_change,model,spec,method,t2_target,noise_weight,abs_nm
+seed23.npy,0,0.02,,200,0.71,0.03208582241426889,-0.00030499164639117784,independent,aligo,local,0.025,0.05,0.0
+seed23.npy,4,0.02,0.0,200,0.92,0.019183326093250873,0.0004894023275437248,independent,aligo,local,0.025,0.05,0.0
+seed23.npy,4,0.02,0.01,200,0.835,0.02624642832844119,0.0004545865767588336,independent,aligo,local,0.025,0.05,0.0
+seed23.npy,4,0.02,0.02,200,0.755,0.030411757594719844,0.0008204314119150924,independent,aligo,local,0.025,0.05,0.0

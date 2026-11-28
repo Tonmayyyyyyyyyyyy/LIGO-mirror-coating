@@ -1,0 +1,38 @@
+B1. Spearman correlations with 'below' entered as 0 (paper) and as 0.25%
+  sturdiness vs gain, perfect measurement  below=0: rho +0.30 p 0.092 | below=0.25%: rho +0.30 p 0.092
+  sturdiness vs gain, 2% measurement       below=0: rho +0.54 p 0.001 | below=0.25%: rho +0.47 p 0.006
+  sturdiness vs loss 0 -> 2% measurement   below=0: rho -0.52 p 0.002 | below=0.25%: rho -0.42 p 0.018
+  sturdiness vs being 'below' at 2% measurement: rho -0.83 p 3e-09 (18 of 32 below)
+
+B2. Two design families by noise proxy (relative to the quarter-wave stack)
+  largest gap in proxy between 1.314e-05 and 1.357e-05: 18 quiet, 14 noisy
+  quiet: n = 18, noise 6.18-6.31 e-21; median tolerable error k0 1.00%, m0 1.56%, m1 1.05%, m2 0.00%; below at 2% meas: 14
+     rescue raised tolerable error (perfect meas.) in 17 of 18; proxy vs sturdiness within family rho +0.72 p 0.00
+  noisy: n = 14, noise 6.44-6.72 e-21; median tolerable error k0 1.31%, m0 2.09%, m1 1.86%, m2 1.33%; below at 2% meas: 4
+     rescue raised tolerable error (perfect meas.) in 13 of 14; proxy vs sturdiness within family rho +0.26 p 0.37
+
+B3. Paired effect sizes (perfect measurement)
+  m0: median per-design change +0.59 pp of sigma_dep (95% CI +0.49 to +0.67); Hodges-Lehmann +0.56; Wilcoxon p = 1e-08
+  m1: median per-design change +0.36 pp of sigma_dep (95% CI +0.07 to +0.48); Hodges-Lehmann +0.26; Wilcoxon p = 0.02
+  m2: median per-design change -0.87 pp of sigma_dep (95% CI -0.95 to -0.19); Hodges-Lehmann -0.54; Wilcoxon p = 8e-05
+  ratio rescued/not (perfect meas.): median 1.43 (95% CI 1.36-1.56); ratio of medians 1.51
+  lower quartile, no rescue vs rescue at 1% meas.: 0.96% vs 0.91%
+
+B4. Without E1-E3 (29 seeded designs)
+  m0: median 1.13% -> 1.72%; up 28, down 1, sign p 1e-07
+  m1: median 1.13% -> 1.61%; up 23, down 6, sign p 0.002
+  m2: median 1.13% -> 0.00%; up 6, down 23, sign p 0.002
+
+B5. 90% pass threshold instead of 95%
+  m0: median 1.43% -> 2.10%; up 30, down 2 (sign p 2e-07); below at 0.25%: 0
+  m1: median 1.43% -> 1.93%; up 27, down 5 (sign p 0.0001); below at 0.25%: 1
+  m2: median 1.43% -> 1.12%; up 13, down 19 (sign p 0.4); below at 0.25%: 12
+
+B7. Noise proxy vs sturdiness, exact proxy
+  rho +0.671, p 3e-05
+
+B8. Proxy vs full noise across the 32 designs (rank correlation)
+  proxy as used (physical thickness)     rho = 0.996
+  E0900068 form (optical thickness)      rho = 0.999
+  total tantala thickness                rho = 0.990
+  gamma_H = 3.888 with the library substrate Y = 60 GPa

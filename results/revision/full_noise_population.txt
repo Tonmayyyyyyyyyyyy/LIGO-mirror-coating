@@ -1,0 +1,11 @@
+32 designs x 200 mirrors, independent errors 2%. Change in full Brownian noise at 100 Hz from rescue (k = 4), same mirror with vs without rescue.
+
+measurement error 0%: all mirrors median -0.017%, 5-95% range -0.63% to +0.30%, max increase +1.09%
+   per-design medians: -0.235% to +0.115%
+   with 72.7 GPa substrate: median -0.008%; proxy: median -0.035%; proxy/full ratio of medians 2.01
+measurement error 1%: all mirrors median -0.009%, 5-95% range -0.71% to +0.32%, max increase +1.06%
+   per-design medians: -0.229% to +0.116%
+   with 72.7 GPa substrate: median -0.003%; proxy: median -0.015%; proxy/full ratio of medians 1.74
+measurement error 2%: all mirrors median -0.003%, 5-95% range -0.83% to +0.40%, max increase +1.16%
+   per-design medians: -0.227% to +0.173%
+   with 72.7 GPa substrate: median +0.005%; proxy: median -0.001%; proxy/full ratio of medians 0.33

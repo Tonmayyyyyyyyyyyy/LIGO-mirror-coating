@@ -1,0 +1,18 @@
+ k  dep%  meas%  pass   +/-  noise%
+ 4  2.00   0.00  0.99  0.00   -0.01
+ 4  2.00   1.00  0.99  0.00   +0.01
+ 4  3.00   0.00  0.89  0.02   +0.02
+ 4  3.00   1.00  0.88  0.02   +0.03
+saved results/checks/noise_weight_0.csv (51 s)
+ k  dep%  meas%  pass   +/-  noise%
+ 4  2.00   0.00  0.99  0.00   -0.35
+ 4  2.00   1.00  0.99  0.00   -0.30
+ 4  3.00   0.00  0.88  0.02   -0.15
+ 4  3.00   1.00  0.88  0.02   -0.11
+saved results/checks/noise_weight_0.05.csv (99 s)
+ k  dep%  meas%  pass   +/-  noise%
+ 4  2.00   0.00  0.99  0.00   -0.45
+ 4  2.00   1.00  0.99  0.01   -0.39
+ 4  3.00   0.00  0.88  0.02   -0.19
+ 4  3.00   1.00  0.88  0.02   -0.16
+saved results/checks/noise_weight_0.5.csv (89 s)

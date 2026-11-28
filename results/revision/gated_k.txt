@@ -1,0 +1,53 @@
+32 designs, 200 mirrors per point, independent errors
+
+A1. Tolerable error (95%), median over designs; per-design comparison
+ meas 0%: no rescue 1.14%  always 1.71%  gated 1.59%  | below: always 0, gated 0
+     gated vs no rescue   up 32 down  0 (sign p 4.7e-10); median change +0.40 pp, Wilcoxon p 4.7e-10
+     gated vs always      up  2 down 30 (sign p 2.5e-07); median change -0.12 pp, Wilcoxon p 1.3e-05
+ meas 1%: no rescue 1.14%  always 1.58%  gated 1.29%  | below: always 3, gated 1
+     gated vs no rescue   up 25 down  6 (sign p 0.00088); median change +0.12 pp, Wilcoxon p 0.0061
+     gated vs always      up  7 down 23 (sign p 0.0052); median change -0.12 pp, Wilcoxon p 0.0064
+ meas 2%: no rescue 1.14%  always 0.00%  gated 0.93%  | below: always 18, gated 9
+     gated vs no rescue   up 10 down 21 (sign p 0.071); median change -0.14 pp, Wilcoxon p 0.0014
+     gated vs always      up 17 down  5 (sign p 0.017); median change +0.00 pp, Wilcoxon p 0.007
+
+ Pass rate at the smallest error (0.25%), median over designs [min]:
+   k0: 100.0% [100.0%]
+   m0: 100.0% [100.0%]
+   m1: 100.0% [88.5%]
+   m2: 93.2% [58.5%]
+   g0: 100.0% [100.0%]
+   g1: 100.0% [94.0%]
+   g2: 97.0% [72.0%]
+ Pass rate at 2% error, median over designs:
+   k0: 75.8%
+   m0: 92.0%
+   m1: 89.0%
+   m2: 78.0%
+   g0: 89.2%
+   g1: 85.0%
+   g2: 76.2%
+
+A3. Pass rate vs number of rescued layers, independent 2%, perfect measurement (32 designs)
+   k =  2: median  83.2%, lower quartile  76.8%, min  57.5%, designs >= 95%: 4
+   k =  4: median  92.0%, lower quartile  85.4%, min  58.5%, designs >= 95%: 13
+   k =  6: median  95.5%, lower quartile  90.3%, min  61.0%, designs >= 95%: 20
+   k =  8: median  96.0%, lower quartile  91.3%, min  63.0%, designs >= 95%: 20
+   k = 12: median  93.5%, lower quartile  90.9%, min  82.5%, designs >= 95%: 11
+   best k per design: k=2: 1, k=4: 1, k=6: 13, k=8: 7, k=12: 10
+   k = 12 vs 4: up 21, down 10, sign p 0.071
+
+A3. Pass rate vs number of rescued layers, shared 1%, perfect measurement (32 designs)
+   k =  2: median  72.5%, lower quartile  67.4%, min  56.0%, designs >= 95%: 0
+   k =  4: median  75.5%, lower quartile  70.0%, min  54.0%, designs >= 95%: 0
+   k =  6: median  79.2%, lower quartile  72.9%, min  57.0%, designs >= 95%: 0
+   k =  8: median  82.7%, lower quartile  73.5%, min  60.0%, designs >= 95%: 0
+   k = 12: median  87.8%, lower quartile  83.9%, min  74.5%, designs >= 95%: 2
+   best k per design: k=2: 0, k=4: 0, k=6: 1, k=8: 2, k=12: 29
+   k = 12 vs 4: up 31, down 1, sign p 1.5e-08
+
+A4. Global (DE) vs fast local optimizer, k = 4, shared 1%, perfect measurement (32 designs, same mirrors)
+   median pass rate: local 75.5%, DE 75.0%, no rescue 65.8% (32 designs)
+   DE better on 7, worse on 2, equal on 23 (sign p 0.18); median gain +0.0 pts, max +3.5 pts
+   designs >= 95%: local 0, DE 0
+   largest gains: seed6 80.0->83.5%, seed24 67.0->70.0%, lownoise_seed5_t2.5 58.0->59.5%

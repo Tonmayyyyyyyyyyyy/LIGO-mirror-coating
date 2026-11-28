@@ -1,0 +1,30 @@
+
+sturdy, independent errors, 2% (200 mirrors)
+  no rescue       pass 186   fails: 532 high 14
+  k=4, meas 0%   pass 200   fails: -
+  k=4, meas 1%   pass 200   fails: -
+
+sturdy, independent errors, 3% (200 mirrors)
+  no rescue       pass 125   fails: 532 high 40, 1064 high + 532 high 18, 1064 high 17
+  k=4, meas 0%   pass 179   fails: 1064 high 16, 532 high 5
+  k=4, meas 1%   pass 176   fails: 1064 high 18, 532 high 6
+
+quiet, independent errors, 2% (200 mirrors)
+  no rescue       pass 140   fails: 532 high 40, 1064 high + 532 high 16, 532 low 2, 1064 high 2
+  k=4, meas 0%   pass 140   fails: 1064 high 34, 1064 high + 532 high 26
+  k=4, meas 1%   pass 126   fails: 1064 high 32, 1064 high + 532 high 28, 532 high 14
+
+sturdy, common errors, 1% (200 mirrors)
+  no rescue       pass 150   fails: 532 high 28, 1064 high + 532 high 22
+  k=4, meas 0%   pass 177   fails: 1064 high 12, 1064 high + 532 high 11
+  k=4, meas 1%   pass 179   fails: 1064 high + 532 high 11, 1064 high 9, 532 high 1
+
+sturdy, common errors, 2% (200 mirrors)
+  no rescue       pass 103   fails: 1064 high + 532 high 63, 532 high 34
+  k=4, meas 0%   pass 129   fails: 1064 high + 532 high 55, 1064 high 16
+  k=4, meas 1%   pass 124   fails: 1064 high + 532 high 56, 1064 high 18, 532 high 2
+
+quiet, common errors, 2% (200 mirrors)
+  no rescue       pass 100   fails: 1064 high + 532 high 71, 532 high 29
+  k=4, meas 0%   pass  84   fails: 1064 high + 532 high 69, 532 high 36, 1064 high 11
+  k=4, meas 1%   pass  94   fails: 1064 high + 532 high 70, 532 high 20, 1064 high 16

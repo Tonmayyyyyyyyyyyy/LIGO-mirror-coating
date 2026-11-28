@@ -1,0 +1,2 @@
+design,k,dep,meas,trials,pass_rate,stderr,noise_change,model,spec,method,t2_target,noise_weight,abs_nm,gate,seed
+seed18.npy,4,0.01,0.0,200,0.725,0.031573327350787724,-0.0012079894898214304,common,aligo,de,0.025,0.05,0.0,0,0
